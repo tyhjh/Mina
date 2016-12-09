@@ -1,6 +1,11 @@
 package mina;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
+import org.json.JSONObject;
+
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
+import json.getJson;
 
 /** 
  * 客户端业务处理逻辑 
@@ -11,7 +16,6 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override  
     public void sessionOpened(IoSession session) throws Exception {  
         System.out.println("incomming 客户端: " + session.getRemoteAddress());  
-        session.write("i am coming");  
     }  
   
     @Override  
@@ -24,8 +28,8 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override  
     public void messageReceived(IoSession session, Object message)  
             throws Exception {  
-  
-        System.out.println("服务器返回的数据：" + message.toString());  
+    	JSONObject jsonObject=new JSONObject(message.toString());
+        System.out.println(jsonObject.getString("from")+":" + jsonObject.getString("msg"));  
     }  
   
     @Override  
@@ -35,12 +39,14 @@ public class MinaClientHandler extends IoHandlerAdapter {
   
     @Override  
     public void sessionCreated(IoSession session) throws Exception {  
-    	session.setAttribute("tyhj", "name");
         // TODO Auto-generated method stub  
-        System.out.println("已建立连接" + session.getRemoteAddress());  
-        session.write("我来了······");  
+        System.out.println("已建立连接" + session.getRemoteAddress());
+        session.write(getJson.getMsg(id, null, null, null));  
     }  
     
+    public void setId(String id){
+    	this.id=id;
+    }
     
-  
+  private String id=null;
 }  
