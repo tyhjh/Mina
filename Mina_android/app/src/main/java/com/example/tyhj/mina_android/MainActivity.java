@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                connect=Connect.getInstance("tyhj5");
-                if(connect==null)
+                //connect=Connect.getInstance("tyhj5","4444");
+                //if(connect==null)
                     Log.e("失败","服务器出错2");
             }
         }).start();
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(connect==null||et_msg.getText().toString().equals("")||et_to.getText().toString().equals(""))
                     return;
-                connect.sendMsg(et_to.getText().toString(),et_msg.getText().toString(),0);
+                //connect.sendMsg(et_to.getText().toString(),et_msg.getText().toString(),0);
             }
         });
     }

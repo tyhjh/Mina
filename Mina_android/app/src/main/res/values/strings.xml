@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Mina_android</string>
+
+    <string name="warn_no_internet">"网络已断开，请检查网络"</string>
+
+
 </resources>

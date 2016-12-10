@@ -11,100 +11,100 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
-import json.getJson;
 import mina.MinaClientHandler;
+import object.User;
 
 public class Connect {
 
-	static String ip2="192.168.43.18";
-	static String ip="192.168.31.215";
-	private static int port=9897;
-	private static String u_id="tyhj";
+    private static String u_id =null;
 
-	private static IoSession session;
-	
-	private static NioSocketConnector connector;
+    private static String RETERN_MSG=null;
 
-	private static volatile Connect connect = null;
+    private static IoSession session;
 
-	//初始化
-	private Connect(String u_id){
+    private static NioSocketConnector connector;
 
-		this.u_id=u_id;
+    private static volatile Connect connect = null;
 
-		try {
-			//Create TCP/IP connection
-			connector = new NioSocketConnector();
+    //初始化
+    private Connect(String u_id, String pwd) {
 
-			//创建接受数据的过滤器
-			DefaultIoFilterChainBuilder chain = connector.getFilterChain();
+        this.u_id = u_id;
 
-			//设定这个过滤器将一行一行(/r/n)的读取数据
-			chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
+        try {
+            //Create TCP/IP connection
+            connector = new NioSocketConnector();
 
-			MinaClientHandler minaClientHandler = new MinaClientHandler();
-			minaClientHandler.setId(u_id);
+            //创建接受数据的过滤器
+            DefaultIoFilterChainBuilder chain = connector.getFilterChain();
 
-			//客户端的消息处理器：一个SamplMinaServerHander对象
-			connector.setHandler(minaClientHandler);
+            //设定这个过滤器将一行一行(/r/n)的读取数据
+            chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
-			//set connect timeout
-			connector.setConnectTimeout(30);
+            MinaClientHandler minaClientHandler = new MinaClientHandler(this);
+            minaClientHandler.setId(u_id);
+            minaClientHandler.setPwd(pwd);
 
-			//连接到服务器：
-			ConnectFuture cf = connector.connect(new InetSocketAddress(ip, port));
+            //客户端的消息处理器：一个SamplMinaServerHander对象
+            connector.setHandler(minaClientHandler);
+
+            //set connect timeout
+            connector.setConnectTimeout(30);
+
+            if(Mina.getIpAddress()==null||Mina.getIpPort()==0)
+                return;
+
+            //连接到服务器：
+            ConnectFuture cf = connector.connect(new InetSocketAddress(Mina.getIpAddress(), Mina.getIpPort()));
+
+            //Wait for the connection attempt to be finished.
+            cf.awaitUninterruptibly();
+
+            session = cf.getSession();
 
 
-			//Wait for the connection attempt to be finished.
-			cf.awaitUninterruptibly();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-			session = cf.getSession();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	//获取实例
-	public static Connect getInstance(String u_id) {
+    //获取实例
+    public static Connect getInstance(String u_id, String pwd) {
         // if already inited, no need to get lock everytime
         if (connect == null) {
             synchronized (Connect.class) {
-                if (connect == null) {
-                	connect = new Connect(u_id);
+                if (session==null||connect == null) {
+                    connect = new Connect(u_id, pwd);
+                    if (session == null)
+                        connect = null;
                 }
             }
         }
- 		if(session!=null)
-        	return connect;
-		return null;
+        if (session != null)
+            return connect;
+        return null;
     }
 
-	//发送消息
-	public static void sendMsg(String to,String msg,int type){
-		if(session==null)
-			return;
-		session.write(getJson.getMsg(u_id, to, msg, type+""));
-	}
+    //发送消息
+    public static void sendMsg(String action, String key, String to, String msg, int type) {
+        if (session == null)
+            return;
+        session.write(getJson.getMsg(action, key, u_id, to, msg, type + ""));
+    }
 
-	//退出
-	public static void LogOut(){
-		if(connector==null)
-			return;
-		connector.dispose();
-	}
-
-	public static void setIp(String ip) {
-		Connect.ip = ip;
-	}
-
-	public static void setIp2(String ip2) {
-		Connect.ip2 = ip2;
-	}
-
-	public static void setPort(int port) {
-		Connect.port = port;
-	}
+    //退出
+    public static void LogOut() {
+        if (connector == null)
+            return;
+        connector.dispose();
+    }
 
 
+    public static String getReternMsg() {
+        return RETERN_MSG;
+    }
 
+    public static void setReternMsg(String reternMsg) {
+        RETERN_MSG = reternMsg;
+    }
 }

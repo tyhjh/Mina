@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/mina-core-2.0.16.jar')
+    compile files('libs/commons-codec-1.10.jar')
 }
