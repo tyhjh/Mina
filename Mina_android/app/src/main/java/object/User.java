@@ -17,14 +17,10 @@ public class User {
 
     private static Connect connect=null;
 
-    private User (){
-
-    }
-
     //登录
     public static String signIn(String id, String pwd, Context context){
         setReternMsg(null);
-        if(Defined.isIntenet(context))
+        if(!Defined.isIntenet(context))
             RETERN_MSG=context.getString(R.string.warn_no_internet);
         else {
             connect = Connect.getInstance(id, pwd);
@@ -33,7 +29,24 @@ public class User {
         return RETERN_MSG;
     }
 
-    //
+    //创建用户
+    public static String signUp(Context context,String name,String eamil,String pwd){
+        setReternMsg(null);
+        if(!Defined.isIntenet(context))
+            RETERN_MSG=context.getString(R.string.warn_no_internet);
+        else
+            connect.signUp(name,eamil,pwd);
+        return RETERN_MSG;
+    }
+
+    //发送消息
+    public static String sendMsg(String msg,String to,int type,Context context){
+        setReternMsg(null);
+        if(!Defined.isIntenet(context))
+            RETERN_MSG=context.getString(R.string.warn_no_internet);
+        connect.sendMsg("singleTalk","",to,msg,type);
+        return RETERN_MSG;
+    }
 
 
 

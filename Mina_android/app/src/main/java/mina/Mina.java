@@ -8,7 +8,7 @@ public class Mina {
     private  static String ipAddress;
     private  static int ipPort=0;
 
-    public Mina(String ip,int port) {
+    public static void initMina(String ip,int port) {
         ipAddress=ip;
         ipPort=port;
     }

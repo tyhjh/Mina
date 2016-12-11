@@ -36,11 +36,8 @@ public class MinaClientHandler extends IoHandlerAdapter {
     public void messageReceived(IoSession session, Object message)
             throws Exception {
         JSONObject jsonObject = new JSONObject(message.toString());
-        //登录返回值
-        if(jsonObject.getString("action").equals("signIn")) {
-            connect.setReternMsg(jsonObject.getString("msg"));
-            return;
-        }
+
+        GetCode.getCode(jsonObject,connect);
 
         System.out.println(jsonObject.getString("from") + ":" + jsonObject.getString("msg"));
     }

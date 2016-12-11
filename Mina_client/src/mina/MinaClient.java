@@ -23,7 +23,7 @@ public class MinaClient {
 	static String ip2="192.168.31.215";
     public static void main(String []args)throws Exception{     
     
-    	Connect connect=Connect.getInstance(ip2, 9897,"tyhj");
+    	Connect connect=Connect.getInstance(ip2, 9897,"tyhj5");
         
         while(true){
         	Scanner in = new Scanner(System.in);
@@ -35,6 +35,8 @@ public class MinaClient {
         	String msg=in.next();
         	
         	connect.SendMsg(toWho, msg, 0+"");
+        	
+        	//connect.LogOut();
         }
         
     }    

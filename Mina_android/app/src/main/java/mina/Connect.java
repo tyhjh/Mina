@@ -10,6 +10,8 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import mina.MinaClientHandler;
 import object.User;
@@ -73,7 +75,7 @@ public class Connect {
         // if already inited, no need to get lock everytime
         if (connect == null) {
             synchronized (Connect.class) {
-                if (session==null||connect == null) {
+                if (connect == null) {
                     connect = new Connect(u_id, pwd);
                     if (session == null)
                         connect = null;
@@ -82,13 +84,16 @@ public class Connect {
         }
         if (session != null)
             return connect;
+        setReternMsg("服务器出错");
         return null;
     }
 
     //发送消息
     public static void sendMsg(String action, String key, String to, String msg, int type) {
-        if (session == null)
+        if (session == null) {
+            setReternMsg("服务器出错");
             return;
+        }
         session.write(getJson.getMsg(action, key, u_id, to, msg, type + ""));
     }
 
@@ -99,6 +104,24 @@ public class Connect {
         connector.dispose();
     }
 
+    //创建用户
+    public static void signUp(String name,String email,String pwd ){
+        String msg;
+        try {
+            msg=new JSONObject().put("name",name)
+                    .put("email",email)
+                    .put("pwd",pwd)
+                    .toString();
+            if (session == null) {
+                setReternMsg("服务器出错");
+                return;
+            }
+            session.write(getJson.getMsg("signUp", "", u_id, "", msg, 0+ ""));
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
 
     public static String getReternMsg() {
         return RETERN_MSG;

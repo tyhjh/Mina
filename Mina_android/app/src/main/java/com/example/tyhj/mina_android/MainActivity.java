@@ -9,9 +9,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import mina.Connect;
+import mina.Mina;
+import object.User;
 
 public class MainActivity extends AppCompatActivity {
-    Connect connect;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //connect=Connect.getInstance("tyhj5","4444");
-                //if(connect==null)
-                    Log.e("失败","服务器出错2");
+                Mina.initMina("192.168.31.215",9897);
+
+                Log.e("登录反馈",User.signIn("tyhj","4444",MainActivity.this)+"");
             }
         }).start();
 
@@ -32,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
         btn_sendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(connect==null||et_msg.getText().toString().equals("")||et_to.getText().toString().equals(""))
+                if(et_msg.getText().toString().equals("")||et_to.getText().toString().equals(""))
                     return;
+                User.sendMsg(et_msg.getText().toString(),et_to.getText().toString(),0,MainActivity.this);
                 //connect.sendMsg(et_to.getText().toString(),et_msg.getText().toString(),0);
             }
         });

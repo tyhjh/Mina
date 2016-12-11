@@ -79,7 +79,7 @@ public class Connect {
 	public static void SendMsg(String to,String msg,String type){
 		if(session==null)
 			return;
-		session.write(getJson.getMsg(u_id, to, msg, type));
+		session.write(getJson.getMsg("singleTalk"," ",u_id, to, msg, type));
 	}
 	
 	public static void LogOut(){

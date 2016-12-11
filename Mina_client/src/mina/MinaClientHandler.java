@@ -41,7 +41,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
     public void sessionCreated(IoSession session) throws Exception {  
         // TODO Auto-generated method stub  
         System.out.println("已建立连接" + session.getRemoteAddress());
-        session.write(getJson.getMsg(id, null, null, null));  
+        session.write(getJson.getMsg("signIn","xx", id, null, null,null));  
     }  
     
     public void setId(String id){
