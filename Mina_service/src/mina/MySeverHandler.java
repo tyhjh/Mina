@@ -21,20 +21,20 @@ public class MySeverHandler extends IoHandlerAdapter {
 	public void messageReceived(IoSession session, Object message) throws Exception {
 
 		JSONObject jsonObject = new JSONObject((String) message);
+		System.out.println("messageReceived："+(String)message+session.getAttribute("id","xx"));
 		// 处理消息
 		Msg.msgManage(session, jsonObject);
-
-		System.out.println("messageReceived："+(String)message+session.getAttribute("id","xx"));
-
 	}
 
 	// 发送消息成功的时候
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
 		JSONObject jsonObject = new JSONObject((String) message);
-		jsonObject.put("action", "msgSent");
-		// 处理消息
-		Msg.msgManage(session, jsonObject);
+		if(jsonObject.getString("action").equals("singleTalk")){
+			jsonObject.put("action", "msgSent");
+			// 处理消息
+			Msg.msgManage(session, jsonObject);
+		}
 		System.out.println("messageSent"+session.getAttribute("id")+jsonObject.toString());
 	}
 

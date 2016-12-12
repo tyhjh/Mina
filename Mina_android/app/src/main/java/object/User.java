@@ -1,8 +1,13 @@
 package object;
 
 import android.content.Context;
+import android.provider.Settings;
+import android.util.Log;
 
 import com.example.tyhj.mina_android.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import mina.Connect;
 import tools.Defined;
@@ -13,49 +18,70 @@ import tools.Defined;
 
 public class User {
 
-    private static String RETERN_MSG=null;
-
     private static Connect connect=null;
 
-    //登录
-    public static String signIn(String id, String pwd, Context context){
-        setReternMsg(null);
+    //初始化
+    public static String init(Context context,String ip,int port){
         if(!Defined.isIntenet(context))
-            RETERN_MSG=context.getString(R.string.warn_no_internet);
+            return context.getString(R.string.warn_no_internet);
+        else
+            connect = Connect.getInstance(ip,port);
+        return getReternMsg();
+    }
+
+    //登陆
+    public static String signIn(String email,String pwd,Context context){
+        connect.setReternMsg(null);
+        if(!Defined.isIntenet(context))
+            return context.getString(R.string.warn_no_internet);
         else {
-            connect = Connect.getInstance(id, pwd);
-            setReternMsg(connect.getReternMsg());
+            try {
+                connect.signIn(email,pwd);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return RETERN_MSG;
+        return getReternMsg();
     }
 
     //创建用户
     public static String signUp(Context context,String name,String eamil,String pwd){
-        setReternMsg(null);
+        connect.setReternMsg(null);
         if(!Defined.isIntenet(context))
-            RETERN_MSG=context.getString(R.string.warn_no_internet);
+            return context.getString(R.string.warn_no_internet);
         else
             connect.signUp(name,eamil,pwd);
-        return RETERN_MSG;
+        return getReternMsg();
     }
 
     //发送消息
     public static String sendMsg(String msg,String to,int type,Context context){
-        setReternMsg(null);
+        connect.setReternMsg(null);
         if(!Defined.isIntenet(context))
-            RETERN_MSG=context.getString(R.string.warn_no_internet);
-        connect.sendMsg("singleTalk","",to,msg,type);
-        return RETERN_MSG;
+            return context.getString(R.string.warn_no_internet);
+        connect.sendMsg("singleTalk",to,msg,type);
+        return getReternMsg();
     }
 
 
 
     private static String getReternMsg() {
-        return RETERN_MSG;
-    }
+        final int[] x = {1};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    x[0] =0;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        while (connect.getReternMsg()==null&&x[0]==1) {
 
-    private static void setReternMsg(String reternMsg) {
-        RETERN_MSG = reternMsg;
+        }
+        return connect.getReternMsg();
     }
 
 }

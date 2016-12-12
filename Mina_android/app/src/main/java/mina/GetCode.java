@@ -10,12 +10,16 @@ import org.json.JSONObject;
 public class GetCode {
     public static void getCode(JSONObject jsonObject,Connect connect){
         //登录返回值
+        int code;
         try {
-
             switch (jsonObject.getString("action")){
                 case "signIn":
                 case "signUp":
-                    connect.setReternMsg(jsonObject.getString("msg"));
+                     code=jsonObject.getInt("code");
+                    if(code==200)
+                        connect.setReternMsg("200");
+                    else
+                        connect.setReternMsg(jsonObject.getString("msg"));
                     break;
             }
 

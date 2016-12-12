@@ -46,8 +46,23 @@ public class Msg {
 
 	// 登录
 	private static void signIn(IoSession session, JSONObject jsonObject) throws JSONException {
-		session.setAttribute("id", jsonObject.getString("from"));
-
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				String email;
+				try {
+					email = jsonObject.getString("email");
+					String pwd=jsonObject.getString("pwd");
+					int code= Mysql.signIn(email, pwd,session);
+					session.write(getJson.getCode(code,"signIn")+"\n");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	// 单人聊天，
@@ -113,11 +128,26 @@ public class Msg {
 
 	//标记信息为已接收
 	private static void msgSent(String msg_id){
-		Mysql.setMsgSent(msg_id);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Mysql.setMsgSent(msg_id);
+			}
+		}).start();
 	}
 	
 	//创建用户
 	private static void createUser(JSONObject jsonObject,IoSession session){ 
-		session.write(getJson.getCode(Mysql.createUser(jsonObject),"signUp"));
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				int code= Mysql.createUser(jsonObject);
+				session.write(getJson.getCode(code,"signUp")+"\n");
+			}
+		}).start();
 	}
 }

@@ -12,11 +12,11 @@ public class GetCode {
 		case 204:
 			return "邮箱已被注册";
 		case 205:
-			
+			return "账号不存在";
+		case 222:
+			return "服务器错误";
 		case 206:
-			
-		case 207:
-			
+			return "账号或密码错误";
 		default:
 			return null;
 		}

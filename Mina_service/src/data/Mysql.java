@@ -4,12 +4,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import org.apache.mina.core.session.IoSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSet;
 import com.mysql.jdbc.Statement;
+import com.sun.org.apache.xpath.internal.operations.And;
 
 public class Mysql {
 
@@ -99,12 +101,36 @@ public class Mysql {
 			if (rs.next()) {
 				return 204;
 			}
-			sql="insert into msg values('" + id + "','" + u_name + "','" + u_pwd + "','" + u_email + "','" + "" + "','" +""+ "','" + "" + "','" +""+ "')";
+			sql="insert into user values('" + id + "','" + u_name + "','" + u_pwd + "','" + u_email + "','" +null+ "','" +null+ "','" + null + "','" +null+ "')";
+			statement.executeUpdate(sql);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 200;
+	}
+	
+	//登陆
+	public static int signIn(String u_email,String pwd,IoSession session){
+		String sql = "select * from user where u_email='" + u_email + "'";
+		ResultSet rs = null;
+		try {
+			rs = (ResultSet) statement.executeQuery(sql);
+			if (!rs.next()) {
+				return 205;
+			}
+		 sql = "select * from user where u_email='" + u_email + "' and u_pwd='"+pwd+"'" ;
+		 rs = (ResultSet) statement.executeQuery(sql);
+		 if (rs.next()) {
+			 	session.setAttribute("id",rs.getString(4));
+			 	return 200;
+			}else
+				return 206;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 222;
 	}
 	
 	// 保存群聊天记录到数据库

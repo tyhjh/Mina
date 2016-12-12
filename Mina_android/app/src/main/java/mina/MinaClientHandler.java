@@ -28,6 +28,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override
     public void exceptionCaught(IoSession session, Throwable cause)
             throws Exception {
+
         System.out.println("客户端发送信息异常....");
     }
 
@@ -35,11 +36,9 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override
     public void messageReceived(IoSession session, Object message)
             throws Exception {
+        System.out.println(message.toString()+"");
         JSONObject jsonObject = new JSONObject(message.toString());
-
         GetCode.getCode(jsonObject,connect);
-
-        System.out.println(jsonObject.getString("from") + ":" + jsonObject.getString("msg"));
     }
 
     @Override
@@ -51,23 +50,5 @@ public class MinaClientHandler extends IoHandlerAdapter {
     public void sessionCreated(IoSession session) throws Exception {
         // TODO Auto-generated method stub  
         System.out.println("已建立连接" + session.getRemoteAddress());
-        session.write(getJson.getMsg(ACTION,pwd,id, null, null, null));
     }
-
-
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    private String id = null;
-
-    private String pwd=null;
-
-    private String ACTION="signIn";
-
 }  

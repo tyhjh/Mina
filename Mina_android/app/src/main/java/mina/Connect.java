@@ -28,10 +28,9 @@ public class Connect {
 
     private static volatile Connect connect = null;
 
+    MinaClientHandler minaClientHandler;
     //初始化
-    private Connect(String u_id, String pwd) {
-
-        this.u_id = u_id;
+    private Connect(String ip,int port) {
 
         try {
             //Create TCP/IP connection
@@ -43,9 +42,7 @@ public class Connect {
             //设定这个过滤器将一行一行(/r/n)的读取数据
             chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
-            MinaClientHandler minaClientHandler = new MinaClientHandler(this);
-            minaClientHandler.setId(u_id);
-            minaClientHandler.setPwd(pwd);
+            minaClientHandler=new MinaClientHandler(this);
 
             //客户端的消息处理器：一个SamplMinaServerHander对象
             connector.setHandler(minaClientHandler);
@@ -53,11 +50,8 @@ public class Connect {
             //set connect timeout
             connector.setConnectTimeout(30);
 
-            if(Mina.getIpAddress()==null||Mina.getIpPort()==0)
-                return;
-
             //连接到服务器：
-            ConnectFuture cf = connector.connect(new InetSocketAddress(Mina.getIpAddress(), Mina.getIpPort()));
+            ConnectFuture cf = connector.connect(new InetSocketAddress(ip,port));
 
             //Wait for the connection attempt to be finished.
             cf.awaitUninterruptibly();
@@ -71,12 +65,12 @@ public class Connect {
     }
 
     //获取实例
-    public static Connect getInstance(String u_id, String pwd) {
+    public static Connect getInstance(String ip,int port) {
         // if already inited, no need to get lock everytime
         if (connect == null) {
             synchronized (Connect.class) {
                 if (connect == null) {
-                    connect = new Connect(u_id, pwd);
+                    connect = new Connect(ip,port);
                     if (session == null)
                         connect = null;
                 }
@@ -89,12 +83,34 @@ public class Connect {
     }
 
     //发送消息
-    public static void sendMsg(String action, String key, String to, String msg, int type) {
+    public static void sendMsg(String action, String to, String msg, int type) {
         if (session == null) {
             setReternMsg("服务器出错");
             return;
         }
-        session.write(getJson.getMsg(action, key, u_id, to, msg, type + ""));
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("msg",msg);
+            jsonObject.put("type",type);
+            session.write(getJson.getMsg(action, u_id, to, jsonObject));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //登陆
+    public static void signIn(String email,String pwd){
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("action","signIn");
+            jsonObject.put("email",email);
+            jsonObject.put("pwd",pwd);
+            session.write(jsonObject.toString());
+            u_id=email;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     //退出
@@ -106,17 +122,16 @@ public class Connect {
 
     //创建用户
     public static void signUp(String name,String email,String pwd ){
-        String msg;
+        JSONObject msg;
         try {
             msg=new JSONObject().put("name",name)
                     .put("email",email)
-                    .put("pwd",pwd)
-                    .toString();
+                    .put("pwd",pwd);
             if (session == null) {
                 setReternMsg("服务器出错");
                 return;
             }
-            session.write(getJson.getMsg("signUp", "", u_id, "", msg, 0+ ""));
+            session.write(getJson.getMsg("signUp", null, null, msg));
         } catch (Exception e) {
 
             e.printStackTrace();

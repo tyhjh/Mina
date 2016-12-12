@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import mina.Connect;
-import mina.Mina;
 import object.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,9 +22,13 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Mina.initMina("192.168.31.215",9897);
 
-                Log.e("登录反馈",User.signIn("tyhj","4444",MainActivity.this)+"");
+                User.init(MainActivity.this,"192.168.31.215",9897);
+
+                Log.e("注册反馈",User.signUp(MainActivity.this,"tyhj","Tyhj","4444")+"");
+
+                Log.e("登录反馈",User.signIn("Tyhj","4444",MainActivity.this)+"");
+
             }
         }).start();
 
@@ -36,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
                 if(et_msg.getText().toString().equals("")||et_to.getText().toString().equals(""))
                     return;
                 User.sendMsg(et_msg.getText().toString(),et_to.getText().toString(),0,MainActivity.this);
-                //connect.sendMsg(et_to.getText().toString(),et_msg.getText().toString(),0);
             }
         });
     }
