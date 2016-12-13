@@ -12,6 +12,10 @@ import mina.Connect;
 import object.User;
 
 public class MainActivity extends AppCompatActivity {
+
+    static String IP="192.168.43.18";
+    static String IP2="192.168.31.215";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                User.init(MainActivity.this,"192.168.31.215",9897);
+                User.init(MainActivity.this,IP,9897);
 
-                Log.e("注册反馈",User.signUp(MainActivity.this,"tyhj","Tyhj","4444")+"");
+                Log.e("注册反馈",User.signUp(MainActivity.this,"tyhj5","Tyhj5","4444")+"");
 
-                Log.e("登录反馈",User.signIn("Tyhj","4444",MainActivity.this)+"");
+                Log.e("登录反馈",User.signIn("Tyhj5","4444",MainActivity.this)+"");
 
             }
         }).start();
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(et_msg.getText().toString().equals("")||et_to.getText().toString().equals(""))
                     return;
-                User.sendMsg(et_msg.getText().toString(),et_to.getText().toString(),0,MainActivity.this);
+                User.sendMsg(et_msg.getText().toString(),et_to.getText().toString(),0,0,MainActivity.this);
             }
         });
     }

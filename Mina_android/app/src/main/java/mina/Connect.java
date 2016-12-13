@@ -83,7 +83,7 @@ public class Connect {
     }
 
     //发送消息
-    public static void sendMsg(String action, String to, String msg, int type) {
+    public static void sendMsg(String action, String to, String msg, int type,int length) {
         if (session == null) {
             setReternMsg("服务器出错");
             return;
@@ -92,6 +92,7 @@ public class Connect {
         try {
             jsonObject.put("msg",msg);
             jsonObject.put("type",type);
+            jsonObject.put("length",length);
             session.write(getJson.getMsg(action, u_id, to, jsonObject));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -123,15 +124,17 @@ public class Connect {
     //创建用户
     public static void signUp(String name,String email,String pwd ){
         JSONObject msg;
+        if (session == null) {
+            setReternMsg("服务器出错");
+            return;
+        }
         try {
-            msg=new JSONObject().put("name",name)
+            msg=new JSONObject()
+                    .put("action","signUp")
+                    .put("name",name)
                     .put("email",email)
                     .put("pwd",pwd);
-            if (session == null) {
-                setReternMsg("服务器出错");
-                return;
-            }
-            session.write(getJson.getMsg("signUp", null, null, msg));
+            session.write(msg.toString());
         } catch (Exception e) {
 
             e.printStackTrace();

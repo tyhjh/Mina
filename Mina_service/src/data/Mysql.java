@@ -15,7 +15,7 @@ import com.sun.org.apache.xpath.internal.operations.And;
 
 public class Mysql {
 
-	static String url = "jdbc:mysql://192.168.31.215/mina?useUnicode=true&characterEncoding=utf8";
+	static String url = "jdbc:mysql://192.168.43.18/mina?useUnicode=true&characterEncoding=utf8";
 	static Connection conn;
 	static Statement statement;
 
@@ -81,9 +81,8 @@ public class Mysql {
 	}
 	
 	//创建用户
-	public static int createUser(JSONObject jsonObject){
+	public static int createUser(JSONObject object){
 		try {
-			JSONObject object=jsonObject.getJSONObject("msg");
 			String u_name=object.getString("name");
 			String u_pwd=object.getString("pwd");
 			String u_email=object.getString("email");

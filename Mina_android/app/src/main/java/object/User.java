@@ -55,11 +55,11 @@ public class User {
     }
 
     //发送消息
-    public static String sendMsg(String msg,String to,int type,Context context){
+    public static String sendMsg(String msg,String to,int type,int length,Context context){
         connect.setReternMsg(null);
         if(!Defined.isIntenet(context))
             return context.getString(R.string.warn_no_internet);
-        connect.sendMsg("singleTalk",to,msg,type);
+        connect.sendMsg("singleTalk",to,msg,type,length);
         return getReternMsg();
     }
 
