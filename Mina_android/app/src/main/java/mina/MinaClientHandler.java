@@ -16,7 +16,6 @@ import tools.Defined;
 public class MinaClientHandler extends IoHandlerAdapter {
 
     Connect connect;
-    boolean isConnect;
 
 
     public MinaClientHandler(Connect connect){
@@ -28,7 +27,6 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override
     public void sessionOpened(IoSession session) throws Exception {
         //System.out.println("incomming 客户端: " + session.getRemoteAddress());
-        isConnect=true;
     }
 
     @Override
@@ -54,10 +52,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
 
     @Override
     public void sessionClosed(final IoSession session) throws Exception {
-        isConnect=false;
         System.out.println("客户端与服务端断开连接.....");
-
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {

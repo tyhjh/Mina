@@ -185,9 +185,79 @@ public class MySeverHandler extends IoHandlerAdapter{
 我们需要知道登录注册是否成功，就是客户端接收到这些请求，在执行完成后发送消息给客户端，客户端接收到后把返回值保存，我用一个循环去读取这个值，当不为**null**,或者时间超出**2000**毫秒的时候返回。
 
 ### 断线重连
+断线就是服务器和客户端的连接断了，可能是手机突然断网了，可能是服务器出问题了，或者其他，但是只要连接断了，客户端监听类里面的**sessionClosed**方法都会监听到，所以只要在里面写好重连方法就好了。
+
+```java
+@Override
+    public void sessionClosed(final IoSession session) throws Exception {
+        System.out.println("客户端与服务端断开连接.....");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (!connect.reconnect().isConnected()) {
+                        try {
+                            Thread.sleep(2000);
+                            System.out.println("正在尝试重新连接.....");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+        }
+```
+重连的时候需要重新连接到服务器并且重新设置自己的身份，而连接服务器时候一些变量已经初始化了，如果重复初始化会出现一些问题，会报错。之前初始化的方法，大概可以改成这个样子：
+
+```java
+if(session==null) {
+                connector = new NioSocketConnector();
+
+                //创建接受数据的过滤器
+                DefaultIoFilterChainBuilder chain = connector.getFilterChain();
+
+                //设定这个过滤器将一行一行(/r/n)的读取数据
+                chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
+
+                minaClientHandler = new MinaClientHandler(this);
+
+                //客户端的消息处理器：一个SamplMinaServerHander对象
+                connector.setHandler(minaClientHandler);
+
+                //set connect timeout
+                connector.setConnectTimeout(5);
+            }
+            //连接到服务器：
+            ConnectFuture cf = connector.connect(new InetSocketAddress(ip,port));
+
+            //Wait for the connection attempt to be finished.
+            cf.awaitUninterruptibly();
+            try {
+                session = cf.getSession();
+            }catch (Exception e){
+                System.out.println("服务器无响应");
+            }
 
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+```
+
+设置身份其实只要告诉服务器，我现在是重连操作，并且把我的身份标识放到session里面，然后把之前那个断线之前的session删除掉就好了。
+```java
+getInstance(ip,port);
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("action","reconnect");
+            jsonObject.put("id",u_id);
+            session.write(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return session;
+```
+当然这样写，就是如果断线了会一直重新尝试连接直到连接上服务器为止，想改进的话可以通过监听网络变化来操作。
 
 
 
@@ -307,4 +377,10 @@ jsonObject.put("msg", GetCode.getCode(code));
 
 {"msg":"邮箱已被注册","code":204,"action":"signUp"}
 ```			
+### 断线重连
+```java
+jsonObject.put("action","reconnect");
+jsonObject.put("id",u_id);
 
+{"action":"reconnect","id":"Tyhj"}
+```
