@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                User.init(MainActivity.this,IP,9897);
+                User.init(MainActivity.this,IP2,9897);
 
                 Log.e("注册反馈",User.signUp(MainActivity.this,"tyhj5","Tyhj5","4444")+"");
 

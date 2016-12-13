@@ -20,6 +20,8 @@ public class Msg {
 	private static final String MSG_SENT = "msgSent";
 	
 	private static final String SIGN_UP = "signUp";
+	
+	private static final String RECONNCET="reconnect";
 
 	public static void msgManage(IoSession session, JSONObject jsonObject) throws JSONException {
 		switch (jsonObject.getString("action")) {
@@ -39,6 +41,11 @@ public class Msg {
 		case SIGN_UP:
 			createUser(jsonObject,session);
 			break;
+			
+		case RECONNCET:
+			reconnect(jsonObject,session);
+			break;
+			
 		default:
 			break;
 		}
@@ -150,4 +157,30 @@ public class Msg {
 			}
 		}).start();
 	}
+	
+	//重新连接
+	private static void reconnect(JSONObject jsonObject,IoSession session){
+		try {
+			String id=jsonObject.getString("id");
+			removeSession(id,session);
+			session.setAttribute("id",id);
+			Collection<IoSession> sessions = session.getService().getManagedSessions().values();
+			for (IoSession sess : sessions) {
+				System.out.println(sess.getAttribute("id")+"重连");
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//删除已存在IoSession
+	public static void removeSession(String id,IoSession session){
+		Collection<IoSession> sessions = session.getService().getManagedSessions().values();
+		for (IoSession sess : sessions) {
+			if (sess.getAttribute("id", "xx").equals(id))
+				sess.close();
+		}
+	}
+	
 }

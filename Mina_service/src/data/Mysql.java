@@ -13,9 +13,13 @@ import com.mysql.jdbc.ResultSet;
 import com.mysql.jdbc.Statement;
 import com.sun.org.apache.xpath.internal.operations.And;
 
+import sendMsg.Msg;
+
 public class Mysql {
 
 	static String url = "jdbc:mysql://192.168.43.18/mina?useUnicode=true&characterEncoding=utf8";
+	
+	static String url2 = "jdbc:mysql://192.168.31.215/mina?useUnicode=true&characterEncoding=utf8";
 	static Connection conn;
 	static Statement statement;
 
@@ -28,7 +32,7 @@ public class Mysql {
 			e.printStackTrace();
 		}
 		try {
-			conn = (Connection) DriverManager.getConnection(url, "tyhj", "4444");
+			conn = (Connection) DriverManager.getConnection(url2, "tyhj", "4444");
 			// System.out.println("成功加载conn！");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -121,6 +125,7 @@ public class Mysql {
 		 sql = "select * from user where u_email='" + u_email + "' and u_pwd='"+pwd+"'" ;
 		 rs = (ResultSet) statement.executeQuery(sql);
 		 if (rs.next()) {
+				Msg.removeSession(u_email,session);
 			 	session.setAttribute("id",rs.getString(4));
 			 	return 200;
 			}else

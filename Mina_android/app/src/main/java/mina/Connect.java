@@ -29,34 +29,45 @@ public class Connect {
     private static volatile Connect connect = null;
 
     MinaClientHandler minaClientHandler;
+
+    private static String ip;
+
+    private static int port;
     //初始化
     private Connect(String ip,int port) {
 
+        this.ip=ip;
+        this.port=port;
         try {
             //Create TCP/IP connection
-            connector = new NioSocketConnector();
+            if(session==null) {
+                connector = new NioSocketConnector();
 
-            //创建接受数据的过滤器
-            DefaultIoFilterChainBuilder chain = connector.getFilterChain();
+                //创建接受数据的过滤器
+                DefaultIoFilterChainBuilder chain = connector.getFilterChain();
 
-            //设定这个过滤器将一行一行(/r/n)的读取数据
-            chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
+                //设定这个过滤器将一行一行(/r/n)的读取数据
+                chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
-            minaClientHandler=new MinaClientHandler(this);
+                minaClientHandler = new MinaClientHandler(this);
 
-            //客户端的消息处理器：一个SamplMinaServerHander对象
-            connector.setHandler(minaClientHandler);
+                //客户端的消息处理器：一个SamplMinaServerHander对象
+                connector.setHandler(minaClientHandler);
 
-            //set connect timeout
-            connector.setConnectTimeout(30);
-
+                //set connect timeout
+                connector.setConnectTimeout(5);
+            }
             //连接到服务器：
             ConnectFuture cf = connector.connect(new InetSocketAddress(ip,port));
 
             //Wait for the connection attempt to be finished.
             cf.awaitUninterruptibly();
+            try {
+                session = cf.getSession();
+            }catch (Exception e){
+                System.out.println("服务器无响应");
+            }
 
-            session = cf.getSession();
 
 
         } catch (Exception e) {
@@ -67,12 +78,10 @@ public class Connect {
     //获取实例
     public static Connect getInstance(String ip,int port) {
         // if already inited, no need to get lock everytime
-        if (connect == null) {
+        if (connect == null||!session.isConnected()) {
             synchronized (Connect.class) {
-                if (connect == null) {
-                    connect = new Connect(ip,port);
-                    if (session == null)
-                        connect = null;
+                if (connect == null || !session.isConnected()) {
+                    connect = new Connect(ip, port);
                 }
             }
         }
@@ -102,6 +111,10 @@ public class Connect {
     //登陆
     public static void signIn(String email,String pwd){
         JSONObject jsonObject=new JSONObject();
+        if(session==null) {
+            setReternMsg("服务器出错");
+            return;
+        }
         try {
             jsonObject.put("action","signIn");
             jsonObject.put("email",email);
@@ -139,6 +152,24 @@ public class Connect {
 
             e.printStackTrace();
         }
+    }
+
+    //重新连接
+    public static IoSession reconnect(){
+        getInstance(ip,port);
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("action","reconnect");
+            jsonObject.put("id",u_id);
+            session.write(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return session;
+    }
+
+    public static String getU_id() {
+        return u_id;
     }
 
     public static String getReternMsg() {

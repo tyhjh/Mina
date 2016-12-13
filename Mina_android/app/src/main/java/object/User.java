@@ -63,8 +63,6 @@ public class User {
         return getReternMsg();
     }
 
-
-
     private static String getReternMsg() {
         final int[] x = {1};
         new Thread(new Runnable() {
