@@ -8,9 +8,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.EActivity;
+
 import mina.Connect;
 import object.User;
 
+@EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
 
     static String IP="192.168.43.18";
@@ -19,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         Button btn_sendMsg= (Button) findViewById(R.id.btn_sendMsg);
         final EditText et_msg= (EditText) findViewById(R.id.et_msg);
         final EditText et_to= (EditText) findViewById(R.id.et_to);

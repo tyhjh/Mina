@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMG</title>
+    <style>
+        body{
+            display: block;
+            width: 100%;
+            position: relative;
+            margin-top: 0;
+            margin-left: 0;
+            background-color: #2e2e2e;
+        }
+        .letterbox{
+            position: absolute;
+            display: block;
+            width:600px;
+            height:200px;
+            top: 50%; left: 50%;
+            margin-top: -100px;
+            margin-left: -300px;
+
+        }
+        .animated{
+            -webkit-animation-duration:1s;
+            animation-duration:1s;
+            -webkit-animation-fill-mode:both;
+            animation-fill-mode:both;
+            animation-timing-function:cubic-bezier(0.36, 0.01, 0.53, 1.4);
+        }
+        .pix4{
+            display: block;
+            width:16px;
+            height:16px;
+            position: absolute;
+        }
+        .pix4 div{
+            left: 0;
+            display: block;
+            width: 8px;
+            height: 8px;
+            background-color: rgba(225,225,225,1);
+            position: absolute;
+            /*-webkit-transition-property: transform,background-color;*/
+            /*-webkit-transition-duration: 0.5s;*/
+            /*transiton-timing-function: cubic-bezier(0.36, 0.01, 0.53, 1.4);*/
+
+
+
+            transition: 0.5s cubic-bezier(0.36, 0.01, 0.53, 1.4);
+            /*-moz-transition:transform 0.5s ; !* Firefox 4 *!*/
+            /*-webkit-transition:transform 0.7s cubic-bezier(0.36, 0.01, 0.53, 1.4); !* Safari and Chrome *!*/
+            /*-o-transition:transform 0.5s ; !* Opera *!*/
+        }
+        .s,.m,.g{
+            display: block;
+            width:150px;
+            height: 150px;
+            position: absolute;
+        }
+        .s{
+            left: 25px;
+            top:25px;
+        }
+        .m{
+            left: 200px;
+            top:25px;
+        }
+        .g{
+            left: 400px;
+            top:25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="letterbox">
+        <div class="s">
+            <div class="pix4" style="top:0px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 20px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 40px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 60px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 80px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;left: 80px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:40px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 20px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 60px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:80px;left: 80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:100px;left: 80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 60px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 20px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:100px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+
+        </div>
+        <div class="m">
+            <div class="pix4" style="top:0px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:40px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:80px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:100px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 20px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;left: 30px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:40px;left: 40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 50px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 70px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:40px;left: 80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;left: 90px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 100px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:40px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:80px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:100px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left: 120px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+
+
+        </div>
+        <div class="g">
+            <div class="pix4" style="top:0px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left:20px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left:40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left:60px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left:80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:0px;left:100px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:20px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:40px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:80px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:100px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left:0px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left:20px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left:40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left:60px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left:80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:120px;left:100px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:100px;left:100px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:80px;left:100px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left:100px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left:80px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left:60px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:60px;left:40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+            <div class="pix4" style="top:80px;left:40px">
+                <div style="top:0px;left: 0px;" class="animated" ></div>
+                <div style="top:0px;left: 8px;" class="animated"></div>
+                <div style="top:8px;left: 0px;" class="animated"></div>
+                <div style="top:8px;left: 8px;" class="animated"></div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="cvs"></canvas>
+
+<script src="js/jquery_2.1.4.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+
+<script>
+    var a_pixHtml='<div class="pix4"><div style="top:0px;left: 0px;" class="animated" ></div> <div style="top:0px;left: 4px;" class="animated"></div> <div style="top:4px;left: 0px;" class="animated"></div> <div style="top:4px;left: 4px;" class="animated"></div></div>';
+    var clientHeight,clientWidth;
+    var ctx,bg=new Image();
+    $(function(){
+        clientHeight=document.documentElement?document.documentElement.clientHeight:document.body.clientHeight;
+        clientWidth=document.documentElement?document.documentElement.clientWidth:document.body.clientWidth;
+//        $('body').css({
+//            "width":clientWidth+"px",
+//            "height":clientHeight+"px"
+//        })
+        $('#cvs').attr("width",clientWidth);
+        $('#cvs').attr("height",clientHeight);
+
+        addHover();
+
+        addCVSAnimation();
+
+        $('.s,.m,.g').mouseover();
+        setTimeout(function(){$('.s,.m,.g').mouseout()},600);
+//        mouseInAnimation();
+    })
+
+    function limitRandom(min,max){
+        max=max?max:-1*min;
+        var r=Math.floor(Math.random()*(max-min)+min);
+        return r!=0?r:1
+    }
+
+    function addHover(){
+        $('.s').hover(
+                function(){
+                    $('.s .pix4 div').each(function() {
+                        $(this).css({
+                            "transform": "translate3d(" + limitRandom(100) + "px," + limitRandom(100) + "px,0)",
+                            "background-color":"rgba(231, 76, 60,1.0)"
+                        })
+                    })
+                },function () {
+                    $('.s .pix4 div').each(function(){
+                                $(this).css({
+                                    "transform":"translate3d(0,0,0)",
+                                    "background-color":"rgba(225, 225, 225,1.0)"
+                                })
+                            }
+
+                    )
+                }
+        )
+        $('.m').hover(
+                function(){
+                    $('.m .pix4 div').each(function() {
+                        $(this).css({
+                            "transform": "translate3d(" + limitRandom(100) + "px," + limitRandom(100) + "px,0)",
+                            "background-color":"rgba(52, 152, 219,1.0)"
+                        })
+                    })
+                },function () {
+                    $('.m .pix4 div').each(function(){
+                                $(this).css({
+                                    "transform":"translate3d(0,0,0)",
+                                    "background-color":"rgba(225, 225, 225,1.0)"
+                                })
+                            }
+
+                    )
+                }
+        )
+        $('.g').hover(
+                function(){
+                    $('.g .pix4 div').each(function() {
+                        $(this).css({
+                            "transform": "translate3d(" + limitRandom(100) + "px," + limitRandom(100) + "px,0)",
+                            "background-color":"rgba(241, 196, 15,1.0)"
+                        })
+                    })
+                },function () {
+                    $('.g .pix4 div').each(function(){
+                                $(this).css({
+                                    "transform":"translate3d(0,0,0)",
+                                    "background-color":"rgba(225, 225, 225,1.0)"
+                                })
+                            }
+
+                    )
+                }
+        )
+    }
+
+
+    function addCVSAnimation(){
+        var cvs=$('#cvs').get(0);
+        ctx=cvs.getContext('2d');
+        var img_=new Image();
+        img_.src='xk.jpg';
+        img_.onload=function(){
+            bg=img_;
+        };
+
+        createPoints();
+    }
+
+    function Point(){
+        this.x=limitRandom(3,clientWidth);
+        this.y=limitRandom(3,clientHeight);
+        this.r=limitRandom(1,3);
+        this.speedX=limitRandom(-1,1);
+        this.speedY=limitRandom(-1,1);
+        this.color='rgba(225,225,225,1)';
+    }
+
+    Point.prototype={
+        move:function(){
+            this.x+=this.speedX;
+            this.y+=this.speedY;
+            if (this.x >= clientWidth - this.r) {
+                this.speedX *= -1;
+            }
+            if (this.x <= this.r) {
+                this.speedX *= -1;
+            }
+            if (this.y >= clientHeight - this.r) {
+                this.speedY *= -1;
+            }
+            if (this.y <= this.r) {
+                this.speedY *= -1;
+            }
+        },
+        draw:function(){
+            ctx.fillStyle=this.color;
+            ctx.beginPath();
+            ctx.arc(this.x,this.y,this.r,0,360*Math.PI/180);
+            ctx.fill();
+        }
+    };
+
+    function line(startX,startY,endX,endY,color){
+        color=color?color:"rgba(225,225,225,0.01)";
+        ctx.lineWidth=1;
+        ctx.strokeStyle=color;
+        ctx.moveTo(startX,startY);
+        ctx.lineTo(endX,endY);
+        ctx.stroke();
+    }
+
+    var points=[];
+    var xx,yy;
+    function createPoints(){
+
+        var point_num=limitRandom(30,50);
+
+        for(var i=0;i<point_num;i++){
+            var p=new Point();
+            points[i]=p;
+        }
+
+
+        pointsAnimation()
+        $(this).mousemove(function(e){
+            xx = e.originalEvent.x || e.originalEvent.layerX || 0;
+            yy = e.originalEvent.y || e.originalEvent.layerY || 0;
+        })
+
+    }
+
+    function pointsAnimation(){
+        ctx.clearRect(0,0,clientWidth,clientHeight);
+//        console.log(1)
+
+        ctx.drawImage(bg,0,0,clientWidth,clientHeight);
+
+
+        for(var i=0;i<points.length;i++){
+            var p=points[i];
+            p.move();p.draw();
+        }
+        var dt,dtm;
+        var ws=[];//握手定理
+        for(var i=0;i<points.length;i++){
+            ws[i]=[];
+            dtm=(points[i].x-xx)*(points[i].x-xx)+(points[i].y-yy)*(points[i].y-yy);
+            if(Math.sqrt(dtm)<100&&Math.sqrt(dtm)>0){
+                line(points[i].x,points[i].y,xx,yy,'rgba(225,225,225,'+Math.floor(Math.sqrt(dt))*3/10000+')')
+//                line(points[i].x,points[i].y,xx,yy,'rgba(225,225,225,1)')
+            }
+
+            for(var j=0;j<points.length;j++){
+                if(i!=j&&!ws[i][j]){
+                    ws[i][j]=1;
+                    dt=(points[i].x-points[j].x)*(points[i].x-points[j].x)+(points[i].y-points[j].y)*(points[i].y-points[j].y)
+                    if(Math.sqrt(dt)<100&&Math.sqrt(dt)>0){
+//                       line(points[i].x,points[i].y,points[j].x,points[j].y,'rgba(225,225,225,1)')
+                       line(points[i].x,points[i].y,points[j].x,points[j].y,'rgba(225,225,225,'+Math.floor(Math.sqrt(dt))*3/10000+')')
+                    }
+                }
+            }
+        }
+
+        ctx.fillStyle='rgba(100,100,100,0.3)';
+        ctx.beginPath();
+        ctx.fillRect(0,0,clientWidth,clientHeight);
+        window.requestAnimationFrame(pointsAnimation)
+    }
+
+
+</script>
+</body>
+</html>

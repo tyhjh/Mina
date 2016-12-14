@@ -168,6 +168,7 @@ public class Connect {
         return session;
     }
 
+
     public static String getU_id() {
         return u_id;
     }
