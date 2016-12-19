@@ -22,6 +22,8 @@ public class Msg {
 	private static final String SIGN_UP = "signUp";
 	
 	private static final String RECONNCET="reconnect";
+	
+	private static final String GET_FRIENDS = "getFriends";
 
 	public static void msgManage(IoSession session, JSONObject jsonObject) throws JSONException {
 		switch (jsonObject.getString("action")) {
@@ -44,6 +46,10 @@ public class Msg {
 			
 		case RECONNCET:
 			reconnect(jsonObject,session);
+			break;
+			
+		case GET_FRIENDS:
+			getFriends(jsonObject.getString("u_id"),session);
 			break;
 			
 		default:
@@ -160,19 +166,49 @@ public class Msg {
 	
 	//重新连接
 	private static void reconnect(JSONObject jsonObject,IoSession session){
-		try {
-			String id=jsonObject.getString("id");
-			removeSession(id,session);
-			session.setAttribute("id",id);
-			Collection<IoSession> sessions = session.getService().getManagedSessions().values();
-			for (IoSession sess : sessions) {
-				System.out.println(sess.getAttribute("id")+"重连");
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					String id=jsonObject.getString("id");
+					removeSession(id,session);
+					session.setAttribute("id",id);
+					Collection<IoSession> sessions = session.getService().getManagedSessions().values();
+					for (IoSession sess : sessions) {
+						System.out.println(sess.getAttribute("id")+"重连");
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}).start();
+	
 	}
+	
+	//获取好友
+	private static void getFriends(String id,IoSession session) {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				session.write(Mysql.getFriends(id)+"\n");
+				Collection<IoSession> sessions = session.getService().getManagedSessions().values();
+				int i=1;
+				for (IoSession sess : sessions) {
+					System.out.println(sess.getAttribute("id")+" "+i);
+					i++;
+				}
+			}
+		}).start();
+	
+	}
+	
+	
 	
 	//删除已存在IoSession
 	public static void removeSession(String id,IoSession session){

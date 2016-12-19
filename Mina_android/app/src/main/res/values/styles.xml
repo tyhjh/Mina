@@ -5,9 +5,16 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/blue</item>
+        <item name="colorAccent">@color/mblue</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="ButtonTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">#adfefefe</item><!--正常状态下的颜色  -->
+        <item name="colorControlHighlight">#22000000</item><!--覆盖色，按下的颜色  -->
+    </style>
 
 
 </resources>

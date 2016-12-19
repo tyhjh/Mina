@@ -40,9 +40,9 @@ public class MinaClientHandler extends IoHandlerAdapter {
     @Override
     public void messageReceived(IoSession session, Object message)
             throws Exception {
-        System.out.println(message.toString()+"");
+        System.out.println("收到消息了"+message.toString());
         JSONObject jsonObject = new JSONObject(message.toString());
-        GetCode.getCode(jsonObject,connect);
+        GetCode.getCode(jsonObject);
     }
 
     @Override
@@ -75,4 +75,4 @@ public class MinaClientHandler extends IoHandlerAdapter {
         // TODO Auto-generated method stub  
         System.out.println("已建立连接" + session.getRemoteAddress());
     }
-}  
+}

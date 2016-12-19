@@ -2,6 +2,7 @@
     <string name="app_name">Mina_android</string>
 
     <string name="warn_no_internet">"网络已断开，请检查网络"</string>
-
+    <string name="signup">您好：\n感谢您注册MSG,这是一封注册确认邮件\n您的验证码是：</string>
+    <string name="share">分享信息已复制到粘贴板</string>
 
 </resources>

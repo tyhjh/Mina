@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
@@ -14,7 +15,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mina.MinaClientHandler;
+import object.LinkMan;
 import object.User;
+import tools.Defined;
 
 public class Connect {
 
@@ -28,19 +31,19 @@ public class Connect {
 
     private static volatile Connect connect = null;
 
-    MinaClientHandler minaClientHandler;
+    IoHandlerAdapter minaClientHandler;
 
     private static String ip;
 
     private static int port;
     //初始化
-    private Connect(String ip,int port) {
+    private Connect(String ip,int port ) {
 
         this.ip=ip;
         this.port=port;
         try {
             //Create TCP/IP connection
-            if(session==null) {
+            if(session==null||!session.isConnected()||connector==null) {
                 connector = new NioSocketConnector();
 
                 //创建接受数据的过滤器
@@ -50,6 +53,7 @@ public class Connect {
                 chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
                 minaClientHandler = new MinaClientHandler(this);
+
 
                 //客户端的消息处理器：一个SamplMinaServerHander对象
                 connector.setHandler(minaClientHandler);
@@ -65,10 +69,10 @@ public class Connect {
             try {
                 session = cf.getSession();
             }catch (Exception e){
-                System.out.println("服务器无响应");
+                e.printStackTrace();
+                Connect.setReternMsg("服务器出错");
+                System.out.println("Connect+服务器无响应");
             }
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,23 +80,23 @@ public class Connect {
     }
 
     //获取实例
-    public static Connect getInstance(String ip,int port) {
+    public static Connect getInstance(String ip, int port) {
         // if already inited, no need to get lock everytime
-        if (connect == null||!session.isConnected()) {
+        if (connect == null||session==null||!session.isConnected()) {
             synchronized (Connect.class) {
-                if (connect == null || !session.isConnected()) {
+                if (connect == null ||session==null|| !session.isConnected()) {
                     connect = new Connect(ip, port);
                 }
             }
         }
         if (session != null)
             return connect;
-        setReternMsg("服务器出错");
+        Connect.setReternMsg("服务器出错");
         return null;
     }
 
     //发送消息
-    public static void sendMsg(String action, String to, String msg, int type,int length) {
+    public  void sendMsg(String action, String to, String msg, int type,int length) {
         if (session == null) {
             setReternMsg("服务器出错");
             return;
@@ -109,7 +113,7 @@ public class Connect {
     }
 
     //登陆
-    public static void signIn(String email,String pwd){
+    public  void signIn(String email,String pwd){
         JSONObject jsonObject=new JSONObject();
         if(session==null) {
             setReternMsg("服务器出错");
@@ -128,14 +132,14 @@ public class Connect {
     }
 
     //退出
-    public static void LogOut() {
+    public  void logOut() {
         if (connector == null)
             return;
         connector.dispose();
     }
 
     //创建用户
-    public static void signUp(String name,String email,String pwd ){
+    public  void signUp(String name,String email,String pwd ){
         JSONObject msg;
         if (session == null) {
             setReternMsg("服务器出错");
@@ -155,7 +159,7 @@ public class Connect {
     }
 
     //重新连接
-    public static IoSession reconnect(){
+    public  IoSession reconnect(){
         getInstance(ip,port);
         JSONObject jsonObject=new JSONObject();
         try {
@@ -168,16 +172,32 @@ public class Connect {
         return session;
     }
 
+    //获取好友
+    public void getFriends(){
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("action","getFriends");
+            jsonObject.put("u_id",User.userInfo.getId());
+            session.write(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public static String getU_id() {
+
+    public  String getU_id() {
         return u_id;
     }
 
-    public static String getReternMsg() {
+    public  static String getReternMsg() {
         return RETERN_MSG;
     }
 
     public static void setReternMsg(String reternMsg) {
         RETERN_MSG = reternMsg;
+    }
+
+    public  IoSession getSession(){
+        return session;
     }
 }

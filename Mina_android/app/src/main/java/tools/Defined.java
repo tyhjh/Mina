@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
+import com.tyhj.myfist_2016_6_29.MyTime;
+
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -31,6 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -276,4 +279,46 @@ public class Defined {
         return null;
     }
 
+    //获取验证码
+    public static String getCode(int length){
+        String code="";
+        Random random=new Random(System.currentTimeMillis());
+        for(int i=0;i<length;i++){
+            code=code+random.nextInt(10);
+        }
+        return code;
+    }
+
+    //获取时间
+    public static String getTime(int time){
+        int ca=getTime()-time;
+        if(ca<10){
+            return null;
+        }else if(ca>10){
+            return "刚刚";
+        }
+        return null;
+    }
+
+    public static String getTime2(int time){
+        int ca=getTime()-time;
+        int ca2=(getTime()/10000)-(time/10000);
+        String str=time+"";
+        if(ca2==1){
+            return ("昨天 • "+str.substring(4,6)+":"+str.substring(6,8));
+        }else if(ca2>1){
+            return (str.substring(0,2)+"月"+str.substring(2,4)+"日 "+str.substring(4,6)+":"+str.substring(6,8));
+        }else if(ca<=10){
+            return ("刚刚");
+        }else if(ca<500){
+            return (str.substring(4,6)+":"+str.substring(6,8));
+        }else {
+            return ("今天 • "+str.substring(4,6)+":"+str.substring(6,8));
+        }
+    }
+
+    public static int getTime(){
+        MyTime myTime=new MyTime();
+        return Integer.parseInt(myTime.getMonth()+myTime.getDays()+myTime.getHour()+myTime.getMinute());
+    }
 }

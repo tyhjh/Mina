@@ -35,7 +35,8 @@ public class MySeverHandler extends IoHandlerAdapter {
 			// 处理消息
 			Msg.msgManage(session, jsonObject);
 		}
-		System.out.println("messageSent"+session.getAttribute("id")+jsonObject.toString());
+		System.out.println("messageSent："+session.getAttribute("id")+jsonObject.toString());
+		
 	}
 
 	@Override

@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<myviews.waveNavigation.LeftDrawerLayout
+    android:id="@+id/id_drawerlayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.example.tyhj.mina_android.MainActivity">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/et_to"
-        android:hint="输入好友id"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content" />
 
-    <EditText
-        android:layout_marginTop="20dp"
-        android:id="@+id/et_msg"
-        android:hint="输入信息"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content" />
+    <include
+        layout="@layout/main_layout" />
 
-    <Button
-        android:layout_marginTop="20dp"
-        android:id="@+id/btn_sendMsg"
-        android:text="发送消息"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+    <!--menu-->
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:clipChildren="false"
+        >
+        <myviews.waveNavigation.FlowingView
+            android:id="@+id/sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <FrameLayout
+            android:id="@+id/id_container_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            />
+    </RelativeLayout>
+
+
+</myviews.waveNavigation.LeftDrawerLayout>

@@ -1,51 +1,89 @@
 package com.example.tyhj.mina_android;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 
-import mina.Connect;
+import java.util.ArrayList;
+import java.util.List;
+
+import adpter.LinkManAdpter;
+import fragement.MyMenuFragment;
+import myviews.waveNavigation.FlowingView;
+import myviews.waveNavigation.LeftDrawerLayout;
+import object.LinkMan;
 import object.User;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
 
-    static String IP="192.168.43.18";
-    static String IP2="192.168.31.215";
+    List<LinkMan> linkMens=new ArrayList<LinkMan>();
+    private LeftDrawerLayout mLeftDrawerLayout;
+
+    LinkManAdpter manAdpter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Button btn_sendMsg= (Button) findViewById(R.id.btn_sendMsg);
-        final EditText et_msg= (EditText) findViewById(R.id.et_msg);
-        final EditText et_to= (EditText) findViewById(R.id.et_to);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    }
 
-                User.init(MainActivity.this,IP2,9897);
+    @ViewById
+    RecyclerView rcly_qun;
 
-                Log.e("注册反馈",User.signUp(MainActivity.this,"tyhj5","Tyhj5","4444")+"");
+    @Click(R.id.iv_showMenu)
+    void showMenu(){
+        mLeftDrawerLayout.openDrawer();
+    }
 
-                Log.e("登录反馈",User.signIn("Tyhj5","4444",MainActivity.this)+"");
+    @AfterViews
+    void afterView(){
+        initdrawerLayout();
+        manAdpter=new LinkManAdpter(linkMens,this);
+        rcly_qun.setAdapter(manAdpter);
+        rcly_qun.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rcly_qun.setItemAnimator(new DefaultItemAnimator());
+        getFriends();
+    }
 
+    @Background
+    void getFriends(){
+        List<LinkMan> linkMen=User.getFriends(this);
+        if(linkMen!=null)
+            for(int i=0;i<linkMen.size();i++){
+                linkMens.add(linkMen.get(i));
             }
-        }).start();
+        updateView();
+    }
 
+    private void initdrawerLayout() {
+        mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
+        FragmentManager fm = getSupportFragmentManager();
+        MyMenuFragment mMenuFragment = (MyMenuFragment) fm.findFragmentById(R.id.id_container_menu);
+        FlowingView mFlowingView = (FlowingView) findViewById(R.id.sv);
+        if (mMenuFragment == null) {
+            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new MyMenuFragment()).commit();
+        }
+        mLeftDrawerLayout.setFluidView(mFlowingView);
+        mLeftDrawerLayout.setMenuFragment(mMenuFragment);
+    }
 
-        btn_sendMsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(et_msg.getText().toString().equals("")||et_to.getText().toString().equals(""))
-                    return;
-                User.sendMsg(et_msg.getText().toString(),et_to.getText().toString(),0,0,MainActivity.this);
-            }
-        });
+    @UiThread()
+    void updateView(){
+        manAdpter.notifyDataSetChanged();
     }
 }

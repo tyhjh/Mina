@@ -17,7 +17,7 @@
             display: block;
             width:600px;
             height:200px;
-            top: 30%; left: 52%;
+            top: 25%; left: 52%;
             margin-top: -100px;
             margin-left: -300px;
 
@@ -73,7 +73,8 @@
         }
     </style>
 </head>
-<body>
+<body background="bg.jpg">
+
     <div class="letterbox">
         <div class="s">
             <div class="pix4" style="top:0px;">
@@ -502,8 +503,7 @@
 
     <canvas id="cvs"></canvas>
 
-<script src="js/jquery_2.1.4.js"></script>
-<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="jquery.min.js"></script>
 
 <script>
     var a_pixHtml='<div class="pix4"><div style="top:0px;left: 0px;" class="animated" ></div> <div style="top:0px;left: 4px;" class="animated"></div> <div style="top:4px;left: 0px;" class="animated"></div> <div style="top:4px;left: 4px;" class="animated"></div></div>';
@@ -611,8 +611,8 @@
         this.x=limitRandom(3,clientWidth);
         this.y=limitRandom(3,clientHeight);
         this.r=limitRandom(1,3);
-        this.speedX=limitRandom(-1,1);
-        this.speedY=limitRandom(-1,1);
+        this.speedX=limitRandom(-2,2);
+        this.speedY=limitRandom(-2,2);
         this.color='rgba(225,225,225,1)';
     }
 
@@ -653,8 +653,8 @@
     var points=[];
     var xx,yy;
     function createPoints(){
-
-        var point_num=limitRandom(30,50);
+        //数目
+        var point_num=limitRandom(60,70);
 
         for(var i=0;i<point_num;i++){
             var p=new Point();
@@ -686,7 +686,7 @@
         for(var i=0;i<points.length;i++){
             ws[i]=[];
             dtm=(points[i].x-xx)*(points[i].x-xx)+(points[i].y-yy)*(points[i].y-yy);
-            if(Math.sqrt(dtm)<100&&Math.sqrt(dtm)>0){
+            if(Math.sqrt(dtm)<75&&Math.sqrt(dtm)>0){
                 line(points[i].x,points[i].y,xx,yy,'rgba(225,225,225,'+Math.floor(Math.sqrt(dt))*3/10000+')')
 //                line(points[i].x,points[i].y,xx,yy,'rgba(225,225,225,1)')
             }
@@ -695,7 +695,7 @@
                 if(i!=j&&!ws[i][j]){
                     ws[i][j]=1;
                     dt=(points[i].x-points[j].x)*(points[i].x-points[j].x)+(points[i].y-points[j].y)*(points[i].y-points[j].y)
-                    if(Math.sqrt(dt)<100&&Math.sqrt(dt)>0){
+                    if(Math.sqrt(dt)<75&&Math.sqrt(dt)>0){
 //                       line(points[i].x,points[i].y,points[j].x,points[j].y,'rgba(225,225,225,1)')
                        line(points[i].x,points[i].y,points[j].x,points[j].y,'rgba(225,225,225,'+Math.floor(Math.sqrt(dt))*3/10000+')')
                     }

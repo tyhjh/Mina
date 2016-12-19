@@ -1,5 +1,7 @@
 package mina;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,7 +10,7 @@ import org.json.JSONObject;
  */
 
 public class GetCode {
-    public static void getCode(JSONObject jsonObject,Connect connect){
+    public static void getCode(JSONObject jsonObject){
         //登录返回值
         int code;
         try {
@@ -17,9 +19,17 @@ public class GetCode {
                 case "signUp":
                      code=jsonObject.getInt("code");
                     if(code==200)
-                        connect.setReternMsg("200");
+                        Connect.setReternMsg("200");
                     else
-                        connect.setReternMsg(jsonObject.getString("msg"));
+                        Connect.setReternMsg(jsonObject.getString("msg"));
+                    break;
+
+                case "getFriends":
+                    code=jsonObject.getInt("code");
+                    if(code==200)
+                        Connect.setReternMsg(jsonObject.getJSONObject("msg").toString());
+                    else
+                        Connect.setReternMsg(null);
                     break;
             }
 

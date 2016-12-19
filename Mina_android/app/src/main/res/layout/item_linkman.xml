@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/ll_group"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:theme="@style/ButtonTheme"
+    style="@style/Widget.AppCompat.Button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        android:id="@+id/iv_headImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
+    <LinearLayout
+        android:paddingLeft="10dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:paddingTop="6dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_group_name"
+                android:textSize="17sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_send_time"
+                android:textSize="13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textSize="13sp"
+                android:id="@+id/tv_who_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_marginRight="7dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:id="@+id/iv_type"
+                android:layout_width="13dp"
+                android:layout_height="13dp" />
+            <TextView
+                android:paddingLeft="3dp"
+                android:singleLine="true"
+                android:maxWidth="200dp"
+                android:id="@+id/tv_text"
+                android:textSize="13sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:background="@drawable/ic_circle_42dp"
+                android:id="@+id/tv_msgCount"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+            <ImageView
+                android:layout_gravity="bottom"
+                android:id="@+id/iv_status"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
