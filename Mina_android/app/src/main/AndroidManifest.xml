@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity_" />
-
+        <activity android:name=".SendMessage_"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"/>
         <service
             android:name="service.MinaSocket_"
             android:enabled="true"

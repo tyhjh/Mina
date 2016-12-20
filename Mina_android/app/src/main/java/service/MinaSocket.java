@@ -64,7 +64,7 @@ public class MinaSocket extends Service {
     //建立连接
     @Background
     void connect() {
-        String code = User.init(getApplicationContext(), IP2, 9897);
+        String code = User.init(getApplicationContext(), IP, 9897);
         //toast(code);
         if (code == null && signIn) {
             if (Defined.isIntenet(getApplicationContext()))
@@ -82,11 +82,11 @@ public class MinaSocket extends Service {
     //退出应用后重新连接
     @Background
     void reconnect() {
-        //Log.e("MinaSocekt", "onStartCommand执行");
-        if (!User.isConnect()&&User.userInfo.getId()!=null) {
-            String code = User.init(getApplicationContext(), IP2, 9897);
+        if (!User.isConnect()) {
+            Log.e("MinaSocekt", "onStartCommand重新连接执行");
+            String code = User.init(getApplicationContext(), IP, 9897);
             toast(code);
-            if (code == null) {
+            if (code == null&&User.userInfo!=null) {
                 User.signIn(User.userInfo.getId(), User.userInfo.getPwd());
                 //Log.e("MinaSocekt验证", User.userInfo.getId()+"");
             }

@@ -48,6 +48,7 @@ public class SignIn extends AppCompatActivity {
         UserInfo user=new SavaDate(this).getUserInfo();
         //登录
         if(user!=null){
+            Log.e("SignIn:","获取到保存的用户数据");
             User.userInfo=user;
             MinaSocket.signIn=true;
             startService(new Intent(this, MinaSocket_.class));

@@ -21,6 +21,8 @@ public class Mysql {
 	static String url = "jdbc:mysql://192.168.43.18/mina?useUnicode=true&characterEncoding=utf8";
 
 	static String url2 = "jdbc:mysql://192.168.31.215/mina?useUnicode=true&characterEncoding=utf8";
+	
+	static String url3="jdbc:mysql://10.66.196.124/mina?useUnicode=true&characterEncoding=utf8";
 	static Connection conn;
 	static Statement statement;
 
@@ -33,7 +35,7 @@ public class Mysql {
 			e.printStackTrace();
 		}
 		try {
-			conn = (Connection) DriverManager.getConnection(url2, "tyhj", "4444");
+			conn = (Connection) DriverManager.getConnection(url, "tyhj", "4444");
 			// System.out.println("成功加载conn！");
 		} catch (SQLException e) {
 			e.printStackTrace();

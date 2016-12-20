@@ -47,12 +47,14 @@ public class MinaClientHandler extends IoHandlerAdapter {
 
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
-
+        System.out.println("messageSent....."+message.toString());
     }
 
     @Override
     public void sessionClosed(final IoSession session) throws Exception {
-        System.out.println("客户端与服务端断开连接.....");
+        System.out.println("sessionClosed+客户端与服务端断开连接.....");
+        if(User.userInfo!=null) {
+            System.out.println("sessionClosed+重新连接执行....."+User.userInfo.getId()+User.userInfo.getPwd());
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -66,6 +68,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
                     }
                 }
             }).start();
+        }
         }
 
 

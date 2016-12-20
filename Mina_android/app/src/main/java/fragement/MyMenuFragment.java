@@ -112,6 +112,7 @@ public class MyMenuFragment extends MenuFragment {
                       Toast.makeText(getActivity(),getString(R.string.share), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.menu_logout:
+                        User.userInfo=null;
                         User.logOut(getContext());
                         startActivity(new Intent(getContext(), SignIn_.class));
                         getActivity().finish();

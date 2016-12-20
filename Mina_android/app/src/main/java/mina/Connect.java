@@ -38,7 +38,6 @@ public class Connect {
     private static int port;
     //初始化
     private Connect(String ip,int port ) {
-
         this.ip=ip;
         this.port=port;
         try {
@@ -135,6 +134,7 @@ public class Connect {
     public  void logOut() {
         if (connector == null)
             return;
+        session.close();
         connector.dispose();
     }
 
@@ -160,6 +160,7 @@ public class Connect {
 
     //重新连接
     public  IoSession reconnect(){
+
         getInstance(ip,port);
         JSONObject jsonObject=new JSONObject();
         try {

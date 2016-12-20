@@ -1,9 +1,11 @@
 package adpter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 
 import com.example.tyhj.mina_android.R;
+import com.example.tyhj.mina_android.SendMessage_;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -49,7 +52,7 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        LinkMan linkMan=linkMans.get(position);
+        final LinkMan linkMan=linkMans.get(position);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             holder.iv_headImage.setClipToOutline(true);
             holder.iv_headImage.setOutlineProvider(Defined.getOutline(true,10,0));
@@ -88,6 +91,17 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
                         holder.tv_text.setText("文件");
                         break;
                 }
+
+        holder.ll_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context, SendMessage_.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("man",linkMan);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 
     }
 
