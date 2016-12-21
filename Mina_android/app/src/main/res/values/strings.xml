@@ -4,5 +4,11 @@
     <string name="warn_no_internet">"网络已断开，请检查网络"</string>
     <string name="signup">您好：\n感谢您注册MSG,这是一封注册确认邮件\n您的验证码是：</string>
     <string name="share">分享信息已复制到粘贴板</string>
+    <string name="savaphotopath">/ASchollMsg</string>
+    <string name="imageFormat">.JPEG</string>
 
+    <string name="zeffect_recordbutton_finger_up_to_cancal_send">手指上滑，取消发送</string>
+    <string name="zeffect_recordbutton_releasing_finger_to_cancal_send">松开手指，取消发送</string>
+    <string name="zeffect_recordbutton_time_too_short">时间太短</string>
+    <string name="singleTalk">singleTalk</string>
 </resources>

@@ -13,9 +13,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import mina.Connect;
+import mina.getJson;
 import tools.Defined;
 import tools.SavaDate;
 
@@ -30,6 +32,8 @@ public class User {
     public static UserInfo userInfo;
 
     private static Connect connect=null;
+
+    private static List<Picture> photo;
 
     //初始化
     public static String init(Context context, String ip, int port){
@@ -78,11 +82,12 @@ public class User {
     }
 
     //发送消息
-    public static String sendMsg(String msg,String to,int type,int length,Context context){
+    public static String sendMsg(String msg,Context context){
         Connect.setReternMsg(null);
         if(!Defined.isIntenet(context))
             return context.getString(R.string.warn_no_internet);
-        connect.sendMsg("singleTalk",to,msg,type,length);
+
+        connect.sendMsg(msg);
         return getReternMsg();
     }
 
@@ -156,4 +161,12 @@ public class User {
         return messges;
     }
 
+    //获取图片
+    public static List<Picture> getPhoto() {
+        return photo;
+    }
+
+    public static void setPhoto(List<Picture> photo) {
+        User.photo = photo;
+    }
 }

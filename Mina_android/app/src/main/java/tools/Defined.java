@@ -8,9 +8,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Outline;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -18,6 +21,9 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.Toast;
 
+import com.example.tyhj.mina_android.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.tyhj.myfist_2016_6_29.MyTime;
 
 import org.json.JSONObject;
@@ -30,12 +36,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import object.User;
 
 /**
  * Created by Tyhj on 2016/12/5.
@@ -177,9 +190,15 @@ public class Defined {
             inputChannel = new FileInputStream(source).getChannel();
             outputChannel = new FileOutputStream(dest).getChannel();
             outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-        } finally {
-            inputChannel.close();
-            outputChannel.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        finally {
+            if(inputChannel!=null)
+                inputChannel.close();
+            if(outputChannel!=null)
+                outputChannel.close();
         }
     }
 
@@ -289,6 +308,145 @@ public class Defined {
         return code;
     }
 
+    /**
+     * 得到本地图片文件
+     * @param context
+     * @return
+     */
+    public static ArrayList<HashMap<String,String>> getAllPictures(Context context) {
+        ArrayList<HashMap<String,String>> picturemaps = new ArrayList<>();
+        HashMap<String,String> picturemap;
+        ContentResolver cr = context.getContentResolver();
+        //先得到缩略图的URL和对应的图片id
+        Cursor cursor = cr.query(
+                MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                new String[]{
+                        MediaStore.Images.Thumbnails.IMAGE_ID,
+                        MediaStore.Images.Thumbnails.DATA
+                },
+                null,
+                null,
+                null);
+        if (cursor.moveToFirst()) {
+            do {
+                picturemap = new HashMap<>();
+                picturemap.put("origin",cursor.getInt(0)+"");
+                picturemap.put("little",cursor.getString(1));
+                picturemaps.add(picturemap);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        //再得到正常图片的path
+        for (int i = 0;i<picturemaps.size();i++) {
+            picturemap = picturemaps.get(i);
+            String media_id = picturemap.get("origin");
+            cursor = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    new String[]{
+                            MediaStore.Images.Media.DATA
+                    },
+                    MediaStore.Audio.Media._ID+"="+media_id,
+                    null,
+                    null
+            );
+            if (cursor.moveToFirst()) {
+                do {
+                    picturemap.put("origin",cursor.getString(0));
+                    picturemaps.set(i,picturemap);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+        }
+        return picturemaps;
+    }
+
+
+    //展示图片的设置
+    public static DisplayImageOptions getOption(){
+        return new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_image)
+                .showImageOnFail(R.drawable.ic_load_failed)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+    }
+
+    //录音时候关闭或开启其他声音
+    public static boolean muteAudioFocus(Context context, boolean bMute) {
+        if(context == null){
+            Log.d("ANDROID_LAB", "context is null.");
+            return false;
+        }
+        boolean bool = false;
+        AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if(bMute){
+            int result = am.requestAudioFocus(null,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+            bool = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        }else{
+            int result = am.abandonAudioFocus(null);
+            bool = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        }
+        Log.d("ANDROID_LAB", "pauseMusic bMute="+bMute +" result="+bool);
+        return bool;
+    }
+
+    //保存文件
+    public static void  savaFile(String url, String name, Handler handler, Context context){
+        saveBitmapFile(returnBitMap(url),name,handler,context);
+    }
+    private static Bitmap returnBitMap(String path) {
+        Bitmap bitmap = null;
+        try {
+            java.net.URL url = new URL(path);
+            URLConnection conn = url.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            bitmap = BitmapFactory.decodeStream(is);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+    public static void saveBitmapFile(Bitmap bm, String name, Handler handler,Context context) {
+        if(bm==null)
+            return;
+        File f1 = new File(Environment.getExternalStorageDirectory()+context.getString(R.string.savaphotopath));
+        if(!f1.exists()){
+            f1.mkdirs();
+        }
+        File imageFile = new File(Environment.getExternalStorageDirectory()+context.getString(R.string.savaphotopath),name);
+        if(imageFile.exists()){
+            return;
+        }
+        int options = 100;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, options, baos);
+        try {
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            fos.write(baos.toByteArray());
+            fos.flush();
+            fos.close();
+            baos.close();
+            handler.sendEmptyMessage(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //随机获取文件名字
+    public static String getTimeName() {
+        MyTime myTime = new MyTime();
+        String date = myTime.getYear() + myTime.getMonth_() + myTime.getDays() +
+                myTime.getWeek_() + myTime.getHour() + myTime.getMinute() +
+                myTime.getSecond() + User.userInfo.getId();
+        return date;
+    }
+
     //获取时间
     public static String getTime(int time){
         int ca=getTime()-time;
@@ -299,6 +457,18 @@ public class Defined {
         }
         return null;
     }
+
+    //时间转化成能看的
+    public static String getDate(long x){
+        String str;
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(x);
+        java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        str=format.format(gc.getTime());
+        str=str.substring(14,19);
+        return str;
+    }
+
 
     public static String getTime2(int time){
         int ca=getTime()-time;

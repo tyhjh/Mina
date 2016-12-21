@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000"
+    android:gravity="right|center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:cardBackgroundColor="@color/colorPrimary"
+            app:cardCornerRadius="17dp"
+            app:cardElevation="0dp">
+
+
+            <LinearLayout
+                android:id="@+id/ll_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_mytext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="210dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="13dp"
+                    android:paddingRight="13dp"
+                    android:paddingTop="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_voice"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/iv_myimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:adjustViewBounds="true"
+        android:maxHeight="180dp"
+        android:maxWidth="150dp"
+        android:paddingRight="10dp"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/iv_status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_gravity="bottom" />
+</LinearLayout>

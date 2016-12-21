@@ -4,6 +4,14 @@ def AAVersion = '4.0.0'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
     defaultConfig {
         applicationId "com.example.tyhj.mina_android"
         minSdkVersion 15
@@ -44,4 +52,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile files('libs/Ysd-first-2016.6.29.jar')
+    compile files('libs/universal-image-loader-1.9.5.jar')
+    // LeanCloud 基础包
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+
 }

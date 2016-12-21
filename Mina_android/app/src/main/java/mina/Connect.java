@@ -32,6 +32,7 @@ public class Connect {
     private static volatile Connect connect = null;
 
     IoHandlerAdapter minaClientHandler;
+    ConnectFuture cf;
 
     private static String ip;
 
@@ -42,7 +43,10 @@ public class Connect {
         this.port=port;
         try {
             //Create TCP/IP connection
-            if(session==null||!session.isConnected()||connector==null) {
+            if(connector==null) {
+
+                //Log.e("Connect","执行了");
+
                 connector = new NioSocketConnector();
 
                 //创建接受数据的过滤器
@@ -61,7 +65,7 @@ public class Connect {
                 connector.setConnectTimeout(5);
             }
             //连接到服务器：
-            ConnectFuture cf = connector.connect(new InetSocketAddress(ip,port));
+            cf = connector.connect(new InetSocketAddress(ip,port));
 
             //Wait for the connection attempt to be finished.
             cf.awaitUninterruptibly();
@@ -95,20 +99,12 @@ public class Connect {
     }
 
     //发送消息
-    public  void sendMsg(String action, String to, String msg, int type,int length) {
+    public  void sendMsg(String msg) {
         if (session == null) {
             setReternMsg("服务器出错");
             return;
         }
-        JSONObject jsonObject=new JSONObject();
-        try {
-            jsonObject.put("msg",msg);
-            jsonObject.put("type",type);
-            jsonObject.put("length",length);
-            session.write(getJson.getMsg(action, u_id, to, jsonObject));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        session.write(msg);
     }
 
     //登陆
@@ -165,7 +161,7 @@ public class Connect {
         JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("action","reconnect");
-            jsonObject.put("id",u_id);
+            jsonObject.put("id",User.userInfo.getId());
             session.write(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();

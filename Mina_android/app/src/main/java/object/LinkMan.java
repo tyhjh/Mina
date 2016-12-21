@@ -3,6 +3,7 @@ package object;
 import org.json.JSONException;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import tools.Defined;
@@ -48,6 +49,8 @@ public class LinkMan implements Serializable{
     }
 
     public List<Messge> getMessges() {
+        if(messges==null)
+            return new ArrayList<Messge>();
         return messges;
     }
 
@@ -66,7 +69,7 @@ public class LinkMan implements Serializable{
     public int getUnRead(){
         if(messges!=null)
         for(int i=messges.size()-1;i>=0;i--){
-            if(messges.get(i).isRead()||messges.get(i).getFrom().equals(User.userInfo.getId()))
+            if(messges.get(i).isRead()||messges.get(i).getType()==0)
                 return messges.size()-1-i;
         }
         return 0;
@@ -103,9 +106,19 @@ public class LinkMan implements Serializable{
         Messge messge=null;
         if(messges!=null) {
             messge = messges.get(messges.size() - 1);
-            if(messge.getFrom().equals(User.userInfo.getId()))
+            if(messge.getType()==0)
                 return "你：";
         }
         return "";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        LinkMan linkMan=null;
+        if(obj==null)
+            linkMan= (LinkMan) obj;
+        if(linkMan!=null&&this!=null&&linkMan.getId().equals(this.id))
+            return true;
+        return false;
     }
 }
