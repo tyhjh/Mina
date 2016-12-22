@@ -56,29 +56,29 @@ import object.User;
 
 public class Defined {
     //是否有网络
-    public static boolean isIntenet(Context context){
-        ConnectivityManager con=(ConnectivityManager)context.getSystemService(Activity.CONNECTIVITY_SERVICE);
-        boolean wifi=con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
-        boolean internet=con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
-        if(wifi||internet){
+    public static boolean isIntenet(Context context) {
+        ConnectivityManager con = (ConnectivityManager) context.getSystemService(Activity.CONNECTIVITY_SERVICE);
+        boolean wifi = con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+        boolean internet = con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        if (wifi || internet) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     //设置控件轮廓
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static ViewOutlineProvider getOutline(boolean b, final int pading, final int circularBead){
-        if(b) {
-            return  new ViewOutlineProvider() {
+    public static ViewOutlineProvider getOutline(boolean b, final int pading, final int circularBead) {
+        if (b) {
+            return new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
                     final int margin = Math.min(view.getWidth(), view.getHeight()) / pading;
                     outline.setOval(margin, margin, view.getWidth() - margin, view.getHeight() - margin);
                 }
             };
-        }else {
+        } else {
             return new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
@@ -106,22 +106,22 @@ public class Defined {
     }
 
     //图片压缩
-    public static void ImgCompress(String filePath,File newFile,int IMAGE_SIZE) {
+    public static void ImgCompress(String filePath, File newFile, int IMAGE_SIZE) {
         //图片质量
-        int imageMg=100;
+        int imageMg = 100;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
         //规定要压缩图片的分辨率
-        options.inSampleSize = calculateInSampleSize(options,1080,1920);
+        options.inSampleSize = calculateInSampleSize(options, 1080, 1920);
         options.inJustDecodeBounds = false;
-        Bitmap bitmap= BitmapFactory.decodeFile(filePath, options);
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
         //如果文件大于100KB就进行质量压缩，每次压缩比例增加百分之五
-        while (baos.toByteArray().length / 1024 > IMAGE_SIZE&&imageMg>60){
+        while (baos.toByteArray().length / 1024 > IMAGE_SIZE && imageMg > 60) {
             baos.reset();
-            imageMg-=5;
+            imageMg -= 5;
             bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
         }
         //然后输出到指定的文件中
@@ -138,21 +138,21 @@ public class Defined {
     }
 
     //图片压缩
-    public static void ImgCompress(String filePath,File newFile,int x,int y,int size) {
-        int imageMg=100;
+    public static void ImgCompress(String filePath, File newFile, int x, int y, int size) {
+        int imageMg = 100;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
         //规定要压缩图片的分辨率
-        options.inSampleSize = calculateInSampleSize(options,x,y);
+        options.inSampleSize = calculateInSampleSize(options, x, y);
         options.inJustDecodeBounds = false;
-        Bitmap bitmap= BitmapFactory.decodeFile(filePath, options);
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
         //如果文件大于100KB就进行质量压缩，每次压缩比例增加百分之五
-        while (baos.toByteArray().length / 1024 > size&&imageMg>50){
+        while (baos.toByteArray().length / 1024 > size && imageMg > 50) {
             baos.reset();
-            imageMg-=5;
+            imageMg -= 5;
             bitmap.compress(Bitmap.CompressFormat.JPEG, imageMg, baos);
         }
         //然后输出到指定的文件中
@@ -175,7 +175,7 @@ public class Defined {
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height/ (float) reqHeight);
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
@@ -190,14 +190,12 @@ public class Defined {
             inputChannel = new FileInputStream(source).getChannel();
             outputChannel = new FileOutputStream(dest).getChannel();
             outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        finally {
-            if(inputChannel!=null)
+        } finally {
+            if (inputChannel != null)
                 inputChannel.close();
-            if(outputChannel!=null)
+            if (outputChannel != null)
                 outputChannel.close();
         }
     }
@@ -220,23 +218,23 @@ public class Defined {
     }
 
     //手机号是否正确
-    public static boolean isMobileNO(String mobiles,Context context) {
+    public static boolean isMobileNO(String mobiles, Context context) {
         Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
         Matcher m = p.matcher(mobiles);
-        boolean is=m.matches();
-        if(!is)
-            Toast.makeText(context,"请输入正确的手机号码",Toast.LENGTH_SHORT).show();
+        boolean is = m.matches();
+        if (!is)
+            Toast.makeText(context, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
         return is;
     }
 
     //邮箱是否正确
-    public static boolean isEmail(String email,Context context) {
+    public static boolean isEmail(String email, Context context) {
         String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
         Pattern p = Pattern.compile(str);
         Matcher m = p.matcher(email);
-        boolean is=m.matches();
-        if(!is)
-            Toast.makeText(context,"请输入正确的Email地址",Toast.LENGTH_SHORT).show();
+        boolean is = m.matches();
+        if (!is)
+            Toast.makeText(context, "请输入正确的Email地址", Toast.LENGTH_SHORT).show();
         return is;
     }
 
@@ -246,7 +244,7 @@ public class Defined {
         URL mURL = null;
         if (way.equals("GET")) {
             try {
-                if(data==null)
+                if (data == null)
                     mURL = new URL(url);
                 else
                     mURL = new URL(url + "?" + data);
@@ -283,7 +281,7 @@ public class Defined {
                 if (responseCode == 200) {
                     InputStream is = conn.getInputStream();
                     String state = For2mat.getInstance().inputStream2String(is);
-                    Log.e("Tag",state);
+                    Log.e("Tag", state);
                     JSONObject jsonObject = new JSONObject(state);
                     if (jsonObject != null)
                         return jsonObject;
@@ -299,23 +297,24 @@ public class Defined {
     }
 
     //获取验证码
-    public static String getCode(int length){
-        String code="";
-        Random random=new Random(System.currentTimeMillis());
-        for(int i=0;i<length;i++){
-            code=code+random.nextInt(10);
+    public static String getCode(int length) {
+        String code = "";
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = 0; i < length; i++) {
+            code = code + random.nextInt(10);
         }
         return code;
     }
 
     /**
      * 得到本地图片文件
+     *
      * @param context
      * @return
      */
-    public static ArrayList<HashMap<String,String>> getAllPictures(Context context) {
-        ArrayList<HashMap<String,String>> picturemaps = new ArrayList<>();
-        HashMap<String,String> picturemap;
+    public static ArrayList<HashMap<String, String>> getAllPictures(Context context) {
+        ArrayList<HashMap<String, String>> picturemaps = new ArrayList<>();
+        HashMap<String, String> picturemap;
         ContentResolver cr = context.getContentResolver();
         //先得到缩略图的URL和对应的图片id
         Cursor cursor = cr.query(
@@ -327,41 +326,37 @@ public class Defined {
                 null,
                 null,
                 null);
-        if (cursor.moveToFirst()) {
-            do {
-                picturemap = new HashMap<>();
-                picturemap.put("origin",cursor.getInt(0)+"");
-                picturemap.put("little",cursor.getString(1));
-                picturemaps.add(picturemap);
-            } while (cursor.moveToNext());
-            cursor.close();
+        while (cursor != null && cursor.moveToNext()) {
+            picturemap = new HashMap<>();
+            picturemap.put("origin", cursor.getInt(0) + "");
+            picturemap.put("little", cursor.getString(1));
+            picturemaps.add(picturemap);
         }
+        cursor.close();
         //再得到正常图片的path
-        for (int i = 0;i<picturemaps.size();i++) {
+        for (int i = 0; i < picturemaps.size(); i++) {
             picturemap = picturemaps.get(i);
             String media_id = picturemap.get("origin");
-            cursor = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            Cursor cursor2 = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Images.Media.DATA
                     },
-                    MediaStore.Audio.Media._ID+"="+media_id,
+                    MediaStore.Audio.Media._ID + "=" + media_id,
                     null,
                     null
             );
-            if (cursor.moveToFirst()) {
-                do {
-                    picturemap.put("origin",cursor.getString(0));
-                    picturemaps.set(i,picturemap);
-                } while (cursor.moveToNext());
-                cursor.close();
+            while (cursor2.moveToNext()) {
+                    picturemap.put("origin", cursor2.getString(0));
+                    picturemaps.set(i, picturemap);
             }
+            cursor2.close();
         }
         return picturemaps;
     }
 
 
     //展示图片的设置
-    public static DisplayImageOptions getOption(){
+    public static DisplayImageOptions getOption() {
         return new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.ic_image)
                 .showImageOnFail(R.drawable.ic_load_failed)
@@ -374,27 +369,28 @@ public class Defined {
 
     //录音时候关闭或开启其他声音
     public static boolean muteAudioFocus(Context context, boolean bMute) {
-        if(context == null){
+        if (context == null) {
             Log.d("ANDROID_LAB", "context is null.");
             return false;
         }
         boolean bool = false;
-        AudioManager am = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        if(bMute){
-            int result = am.requestAudioFocus(null,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (bMute) {
+            int result = am.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
             bool = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
-        }else{
+        } else {
             int result = am.abandonAudioFocus(null);
             bool = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
         }
-        Log.d("ANDROID_LAB", "pauseMusic bMute="+bMute +" result="+bool);
+        Log.d("ANDROID_LAB", "pauseMusic bMute=" + bMute + " result=" + bool);
         return bool;
     }
 
     //保存文件
-    public static void  savaFile(String url, String name, Handler handler, Context context){
-        saveBitmapFile(returnBitMap(url),name,handler,context);
+    public static void savaFile(String url, String name, Handler handler, Context context) {
+        saveBitmapFile(returnBitMap(url), name, handler, context);
     }
+
     private static Bitmap returnBitMap(String path) {
         Bitmap bitmap = null;
         try {
@@ -410,15 +406,16 @@ public class Defined {
         }
         return bitmap;
     }
-    public static void saveBitmapFile(Bitmap bm, String name, Handler handler,Context context) {
-        if(bm==null)
+
+    public static void saveBitmapFile(Bitmap bm, String name, Handler handler, Context context) {
+        if (bm == null)
             return;
-        File f1 = new File(Environment.getExternalStorageDirectory()+context.getString(R.string.savaphotopath));
-        if(!f1.exists()){
+        File f1 = new File(Environment.getExternalStorageDirectory() + context.getString(R.string.savaphotopath));
+        if (!f1.exists()) {
             f1.mkdirs();
         }
-        File imageFile = new File(Environment.getExternalStorageDirectory()+context.getString(R.string.savaphotopath),name);
-        if(imageFile.exists()){
+        File imageFile = new File(Environment.getExternalStorageDirectory() + context.getString(R.string.savaphotopath), name);
+        if (imageFile.exists()) {
             return;
         }
         int options = 100;
@@ -437,7 +434,6 @@ public class Defined {
     }
 
 
-
     //随机获取文件名字
     public static String getTimeName() {
         MyTime myTime = new MyTime();
@@ -448,47 +444,47 @@ public class Defined {
     }
 
     //获取时间
-    public static String getTime(int time){
-        int ca=getTime()-time;
-        if(ca<10){
+    public static String getTime(int time) {
+        int ca = getTime() - time;
+        if (ca < 10) {
             return null;
-        }else if(ca>10){
+        } else if (ca > 10) {
             return "刚刚";
         }
         return null;
     }
 
     //时间转化成能看的
-    public static String getDate(long x){
+    public static String getDate(long x) {
         String str;
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTimeInMillis(x);
         java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        str=format.format(gc.getTime());
-        str=str.substring(14,19);
+        str = format.format(gc.getTime());
+        str = str.substring(14, 19);
         return str;
     }
 
 
-    public static String getTime2(int time){
-        int ca=getTime()-time;
-        int ca2=(getTime()/10000)-(time/10000);
-        String str=time+"";
-        if(ca2==1){
-            return ("昨天 • "+str.substring(4,6)+":"+str.substring(6,8));
-        }else if(ca2>1){
-            return (str.substring(0,2)+"月"+str.substring(2,4)+"日 "+str.substring(4,6)+":"+str.substring(6,8));
-        }else if(ca<=10){
+    public static String getTime2(int time) {
+        int ca = getTime() - time;
+        int ca2 = (getTime() / 10000) - (time / 10000);
+        String str = time + "";
+        if (ca2 == 1) {
+            return ("昨天 • " + str.substring(4, 6) + ":" + str.substring(6, 8));
+        } else if (ca2 > 1) {
+            return (str.substring(0, 2) + "月" + str.substring(2, 4) + "日 " + str.substring(4, 6) + ":" + str.substring(6, 8));
+        } else if (ca <= 10) {
             return ("刚刚");
-        }else if(ca<500){
-            return (str.substring(4,6)+":"+str.substring(6,8));
-        }else {
-            return ("今天 • "+str.substring(4,6)+":"+str.substring(6,8));
+        } else if (ca < 500) {
+            return (str.substring(4, 6) + ":" + str.substring(6, 8));
+        } else {
+            return ("今天 • " + str.substring(4, 6) + ":" + str.substring(6, 8));
         }
     }
 
-    public static int getTime(){
-        MyTime myTime=new MyTime();
-        return Integer.parseInt(myTime.getMonth()+myTime.getDays()+myTime.getHour()+myTime.getMinute());
+    public static int getTime() {
+        MyTime myTime = new MyTime();
+        return Integer.parseInt(myTime.getMonth() + myTime.getDays() + myTime.getHour() + myTime.getMinute());
     }
 }

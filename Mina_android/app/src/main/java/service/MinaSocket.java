@@ -40,6 +40,8 @@ public class MinaSocket extends Service implements SendBordCast{
 
     public static String actionSignIn="singleTalk";
 
+    boolean isReconnect=true;
+
     String TAG="MinaSocket";
 
     public MinaSocket() {
@@ -55,31 +57,22 @@ public class MinaSocket extends Service implements SendBordCast{
     @Override
     public void onCreate() {
         super.onCreate();
+        isReconnect=false;
         //创建默认的ImageLoader配置参数
         ImageLoaderConfiguration configuration = ImageLoaderConfiguration
                 .createDefault(getApplicationContext());
         ImageLoader.getInstance().init(configuration);
         Log.e("MinaSocekt","onCreate执行");
-        if(User.userInfo!=null){
-            reconnect();
-        }else
-            connect();
-    }
-
-    private void reconnect() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                User.init(getApplicationContext(), IP, 9897,MinaSocket.this);
-                User.signIn(User.userInfo.getId(), User.userInfo.getPwd());
-            }
-        }).start();
+        connect();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e("onStartCommand","onStartCommand执行了");
-        connect();
+        if(!User.isConnect()&&isReconnect)
+            connect();
+        else
+            isReconnect=true;
         setPhoto();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -88,7 +81,7 @@ public class MinaSocket extends Service implements SendBordCast{
     @Background
     void connect() {
         String code = User.init(getApplicationContext(), IP, 9897,this);
-        //toast(code);
+        toast(code);
         if (code == null&&User.userInfo!=null) {
             if (Defined.isIntenet(getApplicationContext()))
                 User.signIn(User.userInfo.getId(), User.userInfo.getPwd());
@@ -121,7 +114,6 @@ public class MinaSocket extends Service implements SendBordCast{
 
     @Override
     public void sendBordcast(Messge messge) {
-        new SavaDate(getApplicationContext()).saveOnemessge(messge);
         Intent intent = new Intent("boradcast.action.GETMESSAGE");
         intent.putExtra("msg_single", messge);
         sendBroadcast(intent);

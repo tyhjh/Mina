@@ -52,7 +52,7 @@ public class Mysql {
 	}
 
 	// 保存单人聊天记录到数据库
-	public static void saveMsgSingle(JSONObject jsonObject) throws JSONException, SQLException {
+	public static synchronized void saveMsgSingle(JSONObject jsonObject) throws JSONException, SQLException {
 		String m_id, c, m_date, isReceive, m_msg;
 		String from, to, belong;
 
@@ -74,7 +74,7 @@ public class Mysql {
 	}
 
 	// 设置消息为已收到
-	public static void setMsgSent(String msg_id) {
+	public static synchronized void setMsgSent(String msg_id) {
 		int status = 1;
 		String sql = "update msg set m_isReceive='" + status + "' where m_id='" + msg_id + "'";
 		// System.out.println("开始变");
@@ -87,7 +87,7 @@ public class Mysql {
 	}
 
 	// 创建用户
-	public static int createUser(JSONObject object) {
+	public static synchronized int createUser(JSONObject object) {
 		try {
 			String u_name = object.getString("name");
 			String u_pwd = object.getString("pwd");
@@ -104,6 +104,7 @@ public class Mysql {
 			ResultSet rs = null;
 			rs = (ResultSet) statement.executeQuery(sql);
 			if (rs.next()) {
+				rs.close();
 				return 204;
 			}
 			sql = "insert into user values('" + id + "','" + u_name + "','" + u_pwd + "','" + u_email + "','" + null
@@ -117,7 +118,7 @@ public class Mysql {
 	}
 
 	// 登陆
-	public static int signIn(String u_email, String pwd, IoSession session) {
+	public static synchronized int signIn(String u_email, String pwd, IoSession session) {
 		String sql = "select * from user where u_email='" + u_email + "'";
 		ResultSet rs = null;
 		try {
@@ -130,6 +131,7 @@ public class Mysql {
 			if (rs.next()) {
 				Msg.removeSession(u_email, session);
 				session.setAttribute("id", rs.getString(4));
+				rs.close();
 				return 200;
 			} else
 				return 206;
@@ -141,17 +143,17 @@ public class Mysql {
 	}
 
 	// 保存群聊天记录到数据库
-	public static void saveMsgGroup() {
+	public static synchronized void saveMsgGroup() {
 
 	}
 
 	// 保存通知到数据库
-	public static void saveMsgInform() {
+	public static synchronized void saveMsgInform() {
 
 	}
 
 	// 获取好友
-	public static String getFriends(String id) {
+	public static synchronized String getFriends(String id) {
 		JSONObject object = new JSONObject();
 		try {
 			object.put("action", "getFriends");
@@ -181,6 +183,7 @@ public class Mysql {
 					array.put(object2);
 				}
 			}
+			rs.close();
 			try {
 				object.put("code", 200);
 				JSONObject object3= new JSONObject();

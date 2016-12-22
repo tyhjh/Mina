@@ -72,6 +72,7 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
         }
 
         holder.tv_send_time.setText(linkMan.getTime());
+
         holder.tv_who_send.setText(linkMan.getWho());
                 int type = linkMan.getType();
                 switch (type) {
@@ -79,14 +80,17 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
                         holder.iv_type.setVisibility(View.GONE);
                         break;
                     case 1:
+                        holder.iv_type.setVisibility(View.VISIBLE);
                         holder.iv_type.setImageResource(R.drawable.ic_camera_24dp);
                         holder.tv_text.setText("图片");
                         break;
                     case 2:
+                        holder.iv_type.setVisibility(View.VISIBLE);
                         holder.iv_type.setImageResource(R.drawable.ic_mic_24dp);
                         holder.tv_text.setText("语音");
                         break;
                     case 3:
+                        holder.iv_type.setVisibility(View.VISIBLE);
                         holder.iv_type.setImageResource(R.drawable.ic_file_24dp);
                         holder.tv_text.setText("文件");
                         break;

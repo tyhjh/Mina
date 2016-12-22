@@ -30,25 +30,29 @@ import static android.content.ContentValues.TAG;
 
 public class User {
 
+    public static int TIME_OUT=3000;
+
     public static UserInfo userInfo;
 
     private static Connect connect=null;
 
     private static List<Picture> photo;
 
+    static List<LinkMan> linkMens;
+
     //初始化
     public static String init(Context context, String ip, int port, SendBordCast sendBordCast){
-        Connect.setReternMsg(null);
+        Connect.setReternMsg(null,"init");
         if(!Defined.isIntenet(context))
             return context.getString(R.string.warn_no_internet);
         else
             connect = Connect.getInstance(ip,port,sendBordCast);
-        return getReternMsg();
+        return getReternMsg("init");
     }
 
     //登陆
     public static String signIn(String email,String pwd,Context context){
-        Connect.setReternMsg(null);
+        Connect.setReternMsg(null,"signIn");
         if(!Defined.isIntenet(context))
             return context.getString(R.string.warn_no_internet);
         else {
@@ -58,38 +62,37 @@ public class User {
                 e.printStackTrace();
             }
         }
-        return getReternMsg();
+        return getReternMsg("signIn");
     }
 
     //登陆
     public static String signIn(String email,String pwd){
-        Connect.setReternMsg(null);
+        Connect.setReternMsg(null,"signIn");
             try {
                 connect.signIn(email,pwd);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        return getReternMsg();
+        return getReternMsg("signIn");
     }
 
     //创建用户
     public static String signUp(Context context,String name,String eamil,String pwd){
-        Connect.setReternMsg(null);
+        Connect.setReternMsg(null,"signUp");
         if(!Defined.isIntenet(context))
             return context.getString(R.string.warn_no_internet);
         else
             connect.signUp(name,eamil,pwd);
-        return getReternMsg();
+        return getReternMsg("signUp");
     }
 
     //发送消息
     public static String sendMsg(String msg,Context context){
-        Connect.setReternMsg(null);
-        if(!Defined.isIntenet(context))
+        Connect.setReternMsg(null,"singleTalk");
+        if(!Defined.isIntenet(context)||connect==null)
             return context.getString(R.string.warn_no_internet);
-
-        connect.sendMsg(msg);
-        return getReternMsg();
+            connect.sendMsg(msg);
+        return getReternMsg("singleTalk");
     }
 
     //退出
@@ -99,15 +102,15 @@ public class User {
     }
 
     //获取返回值b
-    private static String getReternMsg() {
+    private static String getReternMsg(String action) {
         long time=System.currentTimeMillis();
-        while (Connect.getReternMsg()==null) {
-            if(System.currentTimeMillis()-time>3000) {
+        while (Connect.getReternMsg(action)==null) {
+            if(System.currentTimeMillis()-time>TIME_OUT) {
                 Log.e("User","time："+(System.currentTimeMillis()));
                 return null;
             }
         }
-        return Connect.getReternMsg();
+        return Connect.getReternMsg(action);
     }
 
     //判断是否连接了
@@ -128,16 +131,24 @@ public class User {
 
     //获取好友
     public static List<LinkMan> getFriends(Context context){
-        List<LinkMan> linkMen=new ArrayList<LinkMan>();
-        Connect.setReternMsg(null);
-        long time=System.currentTimeMillis();
-        while (connect==null){
-            if(System.currentTimeMillis()-time>3000)
-                return null;
+        if(linkMens!=null)
+            return linkMens;
+        List<LinkMan> linkMen;
+        linkMen=new SavaDate(context).getLinkMan();
+        if(linkMen!=null&&linkMen.size()>0) {
+            User.linkMens = linkMen;
+            return linkMen;
         }
+        linkMen=new ArrayList<LinkMan>();
+        Connect.setReternMsg(null,"getFriends");
+        long time=System.currentTimeMillis();
         connect.getFriends();
+        while (Connect.getReternMsg("getFriends")==null){
+            if(System.currentTimeMillis()-time>TIME_OUT)
+                break;
+        }
         try {
-            String msg=getReternMsg();
+            String msg=getReternMsg("getFriends");
             Log.e(TAG,msg+"");
             if(msg==null)
                 return null;
@@ -148,21 +159,24 @@ public class User {
                 linkMen.add(new LinkMan(jsonObject.getString("head_image"),
                         jsonObject.getString("u_id"),
                         jsonObject.getString("u_name"),
-                        User.getMsgLog(jsonObject.getString("u_id"),context)
+                        User.getMsgLog(jsonObject.getString("u_id"))
                         ));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        User.linkMens = linkMen;
+        if(linkMens==null)
+            linkMens=new ArrayList<LinkMan>();
         return linkMen;
     }
 
     //获取相应的聊天信息
-    public static List<Messge> getMsgLog(String id,Context context){
+    public static List<Messge> getMsgLog(String id){
         List<Messge> messges=new ArrayList<Messge>();
-        messges=new SavaDate(context).getMsg(id);
         return messges;
     }
+
 
     //获取图片
     public static List<Picture> getPhoto() {
@@ -172,4 +186,31 @@ public class User {
     public static void setPhoto(List<Picture> photo) {
         User.photo = photo;
     }
+
+
+    public static void upDateView(final Context context, LinkMan linkMan){
+        if(linkMens.contains(linkMan))
+            linkMens.remove(linkMan);
+        linkMens.add(0,linkMan);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new SavaDate(context).saveLinkMan(linkMens);
+            }
+        }).start();
+    }
+    public static void upDateView(final Context context, List<LinkMan> linkMan){
+        linkMens.clear();
+        if(linkMan!=null)
+            for(int i=0;i<linkMan.size();i++){
+                linkMens.add(linkMan.get(i));
+            }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new SavaDate(context).saveLinkMan(linkMens);
+            }
+        }).start();
+    }
+
 }

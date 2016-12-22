@@ -428,7 +428,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
         lv_msg.setAdapter(messageAdpter);
         lv_msg.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         lv_msg.setItemAnimator(new DefaultItemAnimator());
-
+        lv_msg.scrollToPosition(messges.size()-1);
     }
 
     //查看并保存图片
@@ -617,8 +617,8 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
                 public void done(AVException e) {
                     if(e==null){
                         File file1=new File(path);
-                        if(file1.exists())
-                            file1.delete();
+                        /*if(file1.exists())
+                            file1.delete();*/
                         getRecordUrl(RECORD_NAME,size);
                     }
                 }
@@ -651,12 +651,12 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
     public void updateView(Messge messge) {
         messges.add(messge);
         messageAdpter.notifyItemInserted(messges.size() - 1);
+        toLasted();
     }
 
     //发送消息
     @Background
     void sendMsg(String str) {
-        toLasted();
         User.sendMsg(str, SendMessage.this);
         }
 
@@ -699,9 +699,10 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
 
     @Override
     protected void onDestroy() {
-        new SavaDate(this).saveMsg(messges,linkMan.getId());
+        linkMan.setMessges(messges);
+        Log.e("SendMessage","保存长度为："+messges.size()+messageAdpter.getMessges().size());
+        User.upDateView(this,linkMan);
         unregisterReceiver(msgBoradCastReceiver);
         super.onDestroy();
     }
-
 }

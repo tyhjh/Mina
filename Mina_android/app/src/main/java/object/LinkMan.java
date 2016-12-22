@@ -106,7 +106,7 @@ public class LinkMan implements Serializable{
         Messge messge=null;
         if(messges!=null&&messges.size()>0) {
             messge = messges.get(messges.size() - 1);
-            if(messge.getType()==0)
+            if(messge.getType()==1)
                 return "你：";
         }
         return "";
@@ -115,7 +115,7 @@ public class LinkMan implements Serializable{
     @Override
     public boolean equals(Object obj) {
         LinkMan linkMan=null;
-        if(obj==null)
+        if(obj!=null)
             linkMan= (LinkMan) obj;
         if(linkMan!=null&&this!=null&&linkMan.getId().equals(this.id))
             return true;

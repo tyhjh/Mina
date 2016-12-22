@@ -178,6 +178,12 @@ public class MessageAdpter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         try {
                             player.setDataSource(messge.getContent());
                         } catch (IOException e) {
+                            messge.setSoundPath(null);
+                            try {
+                                player.setDataSource(messge.getContent());
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
                             e.printStackTrace();
                         }
                         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -194,7 +200,11 @@ public class MessageAdpter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 if (player.isPlaying())
                                     return;
                                 else if (first[0]) {
-                                    player.prepareAsync();
+                                    try {
+                                        player.prepareAsync();
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                     first[0] = false;
                                 } else if (!first[0]) {
                                     player.start();

@@ -187,10 +187,6 @@ public class Msg {
 					String id=jsonObject.getString("id");
 					removeSession(id,session);
 					session.setAttribute("id",id);
-					Collection<IoSession> sessions = session.getService().getManagedSessions().values();
-					for (IoSession sess : sessions) {
-						System.out.println(sess.getAttribute("id")+"重连");
-					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

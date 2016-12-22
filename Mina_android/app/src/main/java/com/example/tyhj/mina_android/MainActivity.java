@@ -32,6 +32,7 @@ import myviews.waveNavigation.FlowingView;
 import myviews.waveNavigation.LeftDrawerLayout;
 import object.LinkMan;
 import object.User;
+import tools.SavaDate;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -69,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Background
     void getFriends(){
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        linkMens.clear();
         List<LinkMan> linkMen=User.getFriends(this);
         if(linkMen!=null)
             for(int i=0;i<linkMen.size();i++){
@@ -92,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
     @UiThread()
     void updateView(){
         manAdpter.notifyDataSetChanged();
+        User.upDateView(this,linkMens);
+        //Log.e("MainActivity","执行了2："+System.currentTimeMillis());
     }
 
 
@@ -118,5 +127,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(msgBoradCastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFriends();
     }
 }

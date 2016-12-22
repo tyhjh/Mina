@@ -19,19 +19,25 @@ public class GetCode {
         try {
             switch (jsonObject.getString("action")){
                 case "signIn":
+                    code=jsonObject.getInt("code");
+                    if(code==200)
+                        Connect.setReternMsg("200","signIn");
+                    else
+                        Connect.setReternMsg(jsonObject.getString("msg"),"signIn");
+                    break;
                 case "signUp":
                      code=jsonObject.getInt("code");
                     if(code==200)
-                        Connect.setReternMsg("200");
+                        Connect.setReternMsg("200","signUp");
                     else
-                        Connect.setReternMsg(jsonObject.getString("msg"));
+                        Connect.setReternMsg(jsonObject.getString("msg"),"signUp");
                     break;
                 case "getFriends":
                     code=jsonObject.getInt("code");
                     if(code==200)
-                        Connect.setReternMsg(jsonObject.getJSONObject("msg").toString());
+                        Connect.setReternMsg(jsonObject.getJSONObject("msg").toString(),"getFriends");
                     else
-                        Connect.setReternMsg(null);
+                        Connect.setReternMsg(null,"getFriends");
                     break;
                 case "singleTalk":
                     Messge messge=new Messge(jsonObject);

@@ -22,9 +22,9 @@ import tools.Defined;
 
 public class Connect {
 
-    private static String u_id =null;
+    private static String u_id = null;
 
-    private static String RETERN_MSG=null;
+    private static String init, signUp, signIn, singleTalk, reconnect, getFriends;
 
     private static IoSession session;
 
@@ -39,15 +39,17 @@ public class Connect {
 
     private static int port;
 
+
     SendBordCast sendBordCast;
+
     //初始化
     private Connect(String ip, int port, SendBordCast sendBordCast) {
-        this.ip=ip;
-        this.port=port;
-        this.sendBordCast= sendBordCast;
+        this.ip = ip;
+        this.port = port;
+        this.sendBordCast = sendBordCast;
         try {
             //Create TCP/IP connection
-            if(connector==null) {
+            if (connector == null) {
 
                 //Log.e("Connect","执行了");
 
@@ -59,7 +61,7 @@ public class Connect {
                 //设定这个过滤器将一行一行(/r/n)的读取数据
                 chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
-                minaClientHandler = new MinaClientHandler(this,sendBordCast);
+                minaClientHandler = new MinaClientHandler(this, sendBordCast);
 
 
                 //客户端的消息处理器：一个SamplMinaServerHander对象
@@ -69,15 +71,15 @@ public class Connect {
                 connector.setConnectTimeout(5);
             }
             //连接到服务器：
-            cf = connector.connect(new InetSocketAddress(ip,port));
+            cf = connector.connect(new InetSocketAddress(ip, port));
 
             //Wait for the connection attempt to be finished.
             cf.awaitUninterruptibly();
             try {
                 session = cf.getSession();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-                Connect.setReternMsg("服务器出错");
+                Connect.setReternMsg("服务器出错", "init");
                 System.out.println("Connect+服务器无响应");
             }
 
@@ -87,43 +89,43 @@ public class Connect {
     }
 
     //获取实例
-    public static Connect getInstance(String ip, int port,SendBordCast sendBordCast) {
+    public static Connect getInstance(String ip, int port, SendBordCast sendBordCast) {
         // if already inited, no need to get lock everytime
-        if (connect == null||session==null||!session.isConnected()) {
+        if (connect == null || session == null || !session.isConnected()) {
             synchronized (Connect.class) {
-                if (connect == null ||session==null|| !session.isConnected()) {
-                    connect = new Connect(ip, port,sendBordCast);
+                if (connect == null || session == null || !session.isConnected()) {
+                    connect = new Connect(ip, port, sendBordCast);
                 }
             }
         }
         if (session != null)
             return connect;
-        Connect.setReternMsg("服务器出错");
+        Connect.setReternMsg("服务器出错", "init");
         return null;
     }
 
     //发送消息
-    public  void sendMsg(String msg) {
+    public void sendMsg(String msg) {
         if (session == null) {
-            setReternMsg("服务器出错");
+            setReternMsg("服务器出错", "singleTalk");
             return;
         }
         session.write(msg);
     }
 
     //登陆
-    public  void signIn(String email,String pwd){
-        JSONObject jsonObject=new JSONObject();
-        if(session==null) {
-            setReternMsg("服务器出错");
+    public void signIn(String email, String pwd) {
+        JSONObject jsonObject = new JSONObject();
+        if (session == null) {
+            setReternMsg("服务器出错", "signIn");
             return;
         }
         try {
-            jsonObject.put("action","signIn");
-            jsonObject.put("email",email);
-            jsonObject.put("pwd",pwd);
+            jsonObject.put("action", "signIn");
+            jsonObject.put("email", email);
+            jsonObject.put("pwd", pwd);
             session.write(jsonObject.toString());
-            u_id=email;
+            u_id = email;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -131,34 +133,34 @@ public class Connect {
     }
 
     //退出
-    public  void logOut() {
+    public void logOut() {
         if (connector == null)
             return;
-        JSONObject jsonObject=new JSONObject();
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("action","signOut");
-            jsonObject.put("u_id",User.userInfo.getId());
-            User.userInfo=null;
+            jsonObject.put("action", "signOut");
+            jsonObject.put("u_id", User.userInfo.getId());
+            User.userInfo = null;
             session.write(jsonObject.toString());
-            connector=null;
+            connector = null;
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     //创建用户
-    public  void signUp(String name,String email,String pwd ){
+    public void signUp(String name, String email, String pwd) {
         JSONObject msg;
         if (session == null) {
-            setReternMsg("服务器出错");
+            setReternMsg("服务器出错", "signUp");
             return;
         }
         try {
-            msg=new JSONObject()
-                    .put("action","signUp")
-                    .put("name",name)
-                    .put("email",email)
-                    .put("pwd",pwd);
+            msg = new JSONObject()
+                    .put("action", "signUp")
+                    .put("name", name)
+                    .put("email", email)
+                    .put("pwd", pwd);
             session.write(msg.toString());
         } catch (Exception e) {
 
@@ -167,12 +169,12 @@ public class Connect {
     }
 
     //重新连接
-    public  IoSession reconnect(){
-        getInstance(ip,port,sendBordCast);
-        JSONObject jsonObject=new JSONObject();
+    public IoSession reconnect() {
+        getInstance(ip, port, sendBordCast);
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("action","reconnect");
-            jsonObject.put("id",User.userInfo.getId());
+            jsonObject.put("action", "reconnect");
+            jsonObject.put("id", User.userInfo.getId());
             session.write(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -181,31 +183,58 @@ public class Connect {
     }
 
     //获取好友
-    public void getFriends(){
-        JSONObject jsonObject=new JSONObject();
+    public void getFriends() {
+        JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("action","getFriends");
-            jsonObject.put("u_id",User.userInfo.getId());
+            jsonObject.put("action", "getFriends");
+            jsonObject.put("u_id", User.userInfo.getId());
             session.write(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-
-    public  String getU_id() {
+    public String getU_id() {
         return u_id;
     }
 
-    public  static String getReternMsg() {
-        return RETERN_MSG;
+    public static String getReternMsg(String action) {
+        switch (action) {
+            case "init":
+                return Connect.init;
+            case "signUp":
+                return Connect.signUp;
+            case "signIn":
+                return Connect.signIn;
+            case "singleTalk":
+                return Connect.singleTalk;
+            case "getFriends":
+                return Connect.getFriends;
+        }
+        return null;
     }
 
-    public static void setReternMsg(String reternMsg) {
-        RETERN_MSG = reternMsg;
+    public static void setReternMsg(String reternMsg, String action) {
+        switch (action) {
+            case "init":
+                Connect.init = reternMsg;
+                break;
+            case "signUp":
+                Connect.signUp = reternMsg;
+                break;
+            case "signIn":
+                Connect.signIn = reternMsg;
+                break;
+            case "singleTalk":
+                Connect.singleTalk = reternMsg;
+                break;
+            case "getFriends":
+                Connect.getFriends = reternMsg;
+                break;
+        }
     }
 
-    public  IoSession getSession(){
+    public IoSession getSession() {
         return session;
     }
 }
