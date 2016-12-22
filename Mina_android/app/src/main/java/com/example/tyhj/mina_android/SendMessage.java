@@ -649,6 +649,12 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
 
     //更新界面
     public void updateView(Messge messge) {
+        String time=null;
+        if(messges.size()>0)
+            time = Defined.getTime(messge.getIntTime());
+        else
+            time="刚刚";
+        messge.setTime(time);
         messges.add(messge);
         messageAdpter.notifyItemInserted(messges.size() - 1);
         toLasted();
@@ -699,6 +705,9 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
 
     @Override
     protected void onDestroy() {
+        for(Messge msg:messges){
+            msg.setRead(true);
+        }
         linkMan.setMessges(messges);
         Log.e("SendMessage","保存长度为："+messges.size()+messageAdpter.getMessges().size());
         User.upDateView(this,linkMan);

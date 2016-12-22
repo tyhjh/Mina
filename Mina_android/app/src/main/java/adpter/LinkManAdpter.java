@@ -56,6 +56,8 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             holder.iv_headImage.setClipToOutline(true);
             holder.iv_headImage.setOutlineProvider(Defined.getOutline(true,10,0));
+            holder.iv_headImage.setClipToOutline(true);
+            holder.iv_headImage.setOutlineProvider(Defined.getOutline(true, 10, 0));
         }
 
         if(linkMan.getHeadImage()==null||linkMan.getHeadImage().equals("null"))
@@ -64,6 +66,7 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
             Picasso.with(context).load(linkMan.getHeadImage()).into(holder.iv_headImage);
 
         holder.tv_group_name.setText(linkMan.getName());
+
         if(linkMan.getUnRead()==0)
             holder.tv_msgCount.setVisibility(View.GONE);
         else {
@@ -74,9 +77,17 @@ public class LinkManAdpter extends RecyclerView.Adapter<LinkManAdpter.MyViewHold
         holder.tv_send_time.setText(linkMan.getTime());
 
         holder.tv_who_send.setText(linkMan.getWho());
+        if(!linkMan.getWho().equals("")) {
+            Picasso.with(context).load(R.drawable.ic_sent).into(holder.ib_status);
+            holder.ib_status.setVisibility(View.VISIBLE);
+        }
+        else
+            holder.ib_status.setVisibility(View.GONE);
                 int type = linkMan.getType();
                 switch (type) {
                     case 0:
+                        if(linkMan.getMessges().size()>0)
+                            holder.tv_text.setText(linkMan.getMessges().get(linkMan.getMessges().size()-1).getContent());
                         holder.iv_type.setVisibility(View.GONE);
                         break;
                     case 1:

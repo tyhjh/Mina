@@ -17,6 +17,7 @@ public class Messge implements Serializable{
     boolean isRead;
     String imagePath=null;
     String soundPath=null;
+    String time;
 
     public Messge(JSONObject msg) {
         this.msg = msg.toString();
@@ -114,4 +115,23 @@ public class Messge implements Serializable{
     public void setSoundPath(String soundPath) {
         this.soundPath = soundPath;
     }
+
+    public int getIntTime(){
+        String date= null;
+        try {
+            date = getMsg().getString("date");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+       return Integer.parseInt(date.substring(5,7)+date.substring(8,10)+date.substring(11,13)+date.substring(14,16));
+    }
+
+    public String getTime(){
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
 }

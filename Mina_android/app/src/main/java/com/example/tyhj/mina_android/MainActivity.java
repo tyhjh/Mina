@@ -31,6 +31,7 @@ import fragement.MyMenuFragment;
 import myviews.waveNavigation.FlowingView;
 import myviews.waveNavigation.LeftDrawerLayout;
 import object.LinkMan;
+import object.Messge;
 import object.User;
 import tools.SavaDate;
 
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             for(int i=0;i<linkMen.size();i++){
                 linkMens.add(linkMen.get(i));
             }
-        updateView();
+        updateView(-1);
     }
 
     private void initdrawerLayout() {
@@ -97,19 +98,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @UiThread()
-    void updateView(){
-        manAdpter.notifyDataSetChanged();
+    void updateView(int from){
+        if(from==-1||linkMens.size()<2) {
+            manAdpter.notifyDataSetChanged();
+        }else{
+            manAdpter.notifyItemMoved(from,0);
+        }
         User.upDateView(this,linkMens);
         //Log.e("MainActivity","执行了2："+System.currentTimeMillis());
     }
-
 
     //广播
     class MsgBoradCastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String from;
-            String id;
+            Messge messge= (Messge) intent.getSerializableExtra("msg_single");
+            for(int i=0;i<linkMens.size();i++){
+                if(linkMens.get(i).getId().equals(messge.getFrom())){
+                    LinkMan linkMan=linkMens.get(i);
+                    linkMan.getMessges().add(messge);
+                    linkMens.remove(i);
+                    linkMens.add(0,linkMan);
+                    updateView(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -122,11 +135,10 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(msgBoradCastReceiver,intentFilter);
     }
 
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unregisterReceiver(msgBoradCastReceiver);
+        super.onDestroy();
     }
 
     @Override
