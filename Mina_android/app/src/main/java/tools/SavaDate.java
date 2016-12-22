@@ -24,7 +24,6 @@ public  class SavaDate {
         this.context=context;
     }
 
-
     //保存用户信息
     public static void saveUserInfo(UserInfo object) {
         SharedPreferences shared = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -44,6 +43,7 @@ public  class SavaDate {
             e.printStackTrace();
         }
     }
+
     //获取用户信息
     public static UserInfo getUserInfo() {
         SharedPreferences shared = context.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
@@ -125,5 +125,16 @@ public  class SavaDate {
         editor.clear();
         editor.commit();
     }
+
+    //保存一条信息
+    public static void saveOnemessge(Messge messge){
+        List<Messge> messges=getMsg(messge.getFrom());
+        if(messges==null)
+            messges=new ArrayList<Messge>();
+        messges.add(messge);
+        saveMsg(messges,messge.getFrom());
+    }
+
+    //
 
 }  

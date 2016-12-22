@@ -13,18 +13,18 @@ import java.io.Serializable;
 
 public class Messge implements Serializable{
     int type;
-    JSONObject msg;
+    String msg;
     boolean isRead;
     String imagePath=null;
     String soundPath=null;
 
     public Messge(JSONObject msg) {
-        this.msg = msg;
+        this.msg = msg.toString();
     }
 
     public int getContentType(){
         try {
-            return msg.getInt("type");
+            return new JSONObject(msg).getInt("type");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class Messge implements Serializable{
         if(soundPath!=null)
             return soundPath;
         try {
-            return msg.getString("msg");
+            return new JSONObject(msg).getString("msg");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class Messge implements Serializable{
 
     public String getVoiceLength(){
         try {
-            return msg.getInt("length")+"";
+            return new JSONObject(msg).getInt("length")+"";
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class Messge implements Serializable{
         if(type==2)
             return 2;
         try {
-            if(msg.getString("from").equals(User.userInfo.getId()))
+            if(new JSONObject(msg).getString("from").equals(User.userInfo.getId()))
                 return 1;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -72,7 +72,12 @@ public class Messge implements Serializable{
     }
 
     public JSONObject getMsg() {
-        return msg;
+        try {
+            return new JSONObject(msg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public boolean isRead() {
@@ -89,12 +94,22 @@ public class Messge implements Serializable{
 
     public  void update(String url){
         try {
-            msg.put("msg",url);
+            JSONObject jsonObject=new JSONObject(msg);
+            jsonObject.put("msg",url);
+            msg=jsonObject.toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    public String getFrom(){
+        try {
+            return new JSONObject(msg).getString("from");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public void setSoundPath(String soundPath) {
         this.soundPath = soundPath;

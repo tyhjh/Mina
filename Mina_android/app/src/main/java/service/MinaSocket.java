@@ -24,24 +24,23 @@ import java.util.List;
 
 import mina.Connect;
 import mina.GetCode;
+import myinterface.SendBordCast;
+import object.Messge;
 import object.Picture;
 import object.User;
 import object.UserInfo;
 import tools.Defined;
+import tools.SavaDate;
 
 @EService
-public class MinaSocket extends Service {
+public class MinaSocket extends Service implements SendBordCast{
 
-    static String IP2= "192.168.43.18";
-    static String IP = "192.168.31.215";
+    static String IP2="192.168.43.18";
+    static String IP= "192.168.31.215";
 
     public static String actionSignIn="singleTalk";
 
-    public static boolean signIn;
-
     String TAG="MinaSocket";
-
-    boolean reconnect = true;
 
     public MinaSocket() {
 
@@ -56,34 +55,41 @@ public class MinaSocket extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        reconnect = false;
         //创建默认的ImageLoader配置参数
         ImageLoaderConfiguration configuration = ImageLoaderConfiguration
                 .createDefault(getApplicationContext());
         ImageLoader.getInstance().init(configuration);
-        //Log.e("MinaSocekt","onCreate执行");
-        connect();
+        Log.e("MinaSocekt","onCreate执行");
+        if(User.userInfo!=null){
+            reconnect();
+        }else
+            connect();
+    }
+
+    private void reconnect() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                User.init(getApplicationContext(), IP, 9897,MinaSocket.this);
+                User.signIn(User.userInfo.getId(), User.userInfo.getPwd());
+            }
+        }).start();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("onStartCommand","onStartCommand执行了");
+        connect();
         setPhoto();
-        if(reconnect)
-            reconnect();
-        else {
-            reconnect = true;
-            //Log.e("MinaSocekt", "onStartCommand没有执行");
-        }
-
         return super.onStartCommand(intent, flags, startId);
     }
 
     //建立连接
     @Background
     void connect() {
-        String code = User.init(getApplicationContext(), IP, 9897);
+        String code = User.init(getApplicationContext(), IP, 9897,this);
         //toast(code);
-        if (code == null && signIn) {
+        if (code == null&&User.userInfo!=null) {
             if (Defined.isIntenet(getApplicationContext()))
                 User.signIn(User.userInfo.getId(), User.userInfo.getPwd());
         }
@@ -94,20 +100,6 @@ public class MinaSocket extends Service {
     void toast(String string) {
         if (string != null)
             Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-    }
-
-    //退出应用后重新连接
-    @Background
-    void reconnect() {
-        if (!User.isConnect()) {
-            String code = User.init(getApplicationContext(), IP, 9897);
-            //toast(code);
-            if (code == null&&User.userInfo!=null) {
-                //Log.e("MinaSocekt", "onStartCommand重新连接执行");
-                User.signIn(User.userInfo.getId(), User.userInfo.getPwd());
-                //Log.e("MinaSocekt验证", User.userInfo.getId()+"");
-            }
-        }
     }
 
     @Background
@@ -125,6 +117,14 @@ public class MinaSocket extends Service {
             }
         }
         User.setPhoto(pictures);
+    }
+
+    @Override
+    public void sendBordcast(Messge messge) {
+        new SavaDate(getApplicationContext()).saveOnemessge(messge);
+        Intent intent = new Intent("boradcast.action.GETMESSAGE");
+        intent.putExtra("msg_single", messge);
+        sendBroadcast(intent);
     }
 
 }

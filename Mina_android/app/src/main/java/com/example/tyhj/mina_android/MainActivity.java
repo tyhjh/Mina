@@ -1,5 +1,9 @@
 package com.example.tyhj.mina_android;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     LinkManAdpter manAdpter;
 
+    MsgBoradCastReceiver msgBoradCastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         rcly_qun.setAdapter(manAdpter);
         rcly_qun.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rcly_qun.setItemAnimator(new DefaultItemAnimator());
+        signBroadCast();
         getFriends();
     }
 
@@ -85,5 +92,31 @@ public class MainActivity extends AppCompatActivity {
     @UiThread()
     void updateView(){
         manAdpter.notifyDataSetChanged();
+    }
+
+
+    //广播
+    class MsgBoradCastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String from;
+            String id;
+        }
+    }
+
+    //注册广播
+    private void signBroadCast() {
+        msgBoradCastReceiver=new MainActivity.MsgBoradCastReceiver();
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("boradcast.action.GETMESSAGE");
+        intentFilter.setPriority(900);
+        registerReceiver(msgBoradCastReceiver,intentFilter);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(msgBoradCastReceiver);
     }
 }

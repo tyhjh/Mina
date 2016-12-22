@@ -24,6 +24,8 @@ public class Msg {
 	private static final String RECONNCET="reconnect";
 	
 	private static final String GET_FRIENDS = "getFriends";
+	
+	private static final String SIGN_OUT="signOut";
 
 	public static void msgManage(IoSession session, JSONObject jsonObject) throws JSONException {
 		switch (jsonObject.getString("action")) {
@@ -52,8 +54,17 @@ public class Msg {
 			getFriends(jsonObject.getString("u_id"),session);
 			break;
 			
+		case SIGN_OUT:
+			signOut(session,jsonObject.getString("u_id"));
+			break;
 		default:
 			break;
+		}
+		
+		Collection<IoSession> sessions = session.getService().getManagedSessions().values();
+		int i=1;
+		for (IoSession sess : sessions) {
+			System.out.println(i+"存在的用户："+sess.getAttribute("id")+" ");
 		}
 	}
 
@@ -197,12 +208,6 @@ public class Msg {
 			public void run() {
 				// TODO Auto-generated method stub
 				session.write(Mysql.getFriends(id)+"\n");
-				Collection<IoSession> sessions = session.getService().getManagedSessions().values();
-				int i=1;
-				for (IoSession sess : sessions) {
-					System.out.println(sess.getAttribute("id")+" "+i);
-					i++;
-				}
 			}
 		}).start();
 	
@@ -212,6 +217,14 @@ public class Msg {
 	
 	//删除已存在IoSession
 	public static void removeSession(String id,IoSession session){
+		Collection<IoSession> sessions = session.getService().getManagedSessions().values();
+		for (IoSession sess : sessions) {
+			if (sess.getAttribute("id", "xx").equals(id))
+				sess.close();
+		}
+	}
+	
+	private static void signOut(IoSession session,String id) {
 		Collection<IoSession> sessions = session.getService().getManagedSessions().values();
 		for (IoSession sess : sessions) {
 			if (sess.getAttribute("id", "xx").equals(id))

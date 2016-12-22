@@ -2,9 +2,11 @@ package com.example.tyhj.mina_android;
 
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -76,6 +78,7 @@ import service.MinaSocket;
 import tools.AudioRecoderUtils;
 import tools.Defined;
 import tools.PopupWindowFactory;
+import tools.SavaDate;
 import tools.StatusBarUtil;
 
 import static android.R.attr.y;
@@ -108,6 +111,8 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
     long time=0;
     ImageView mImageView;
     TextView mTextView;
+
+    MsgBoradCastReceiver msgBoradCastReceiver;
 
     @ViewById
     LinearLayout ll_add;
@@ -194,6 +199,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
     @AfterViews
     void AfterView() {
         initView();
+        signBroadCast();
         sendVioce();
     }
 
@@ -213,7 +219,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
                 messge.setImagePath(sendPicture.get(i).getPath_origin());
                 updateView(messge);
                 //保存图片到服务器
-                savaImage(sendPicture.get(i).getPath_origin(), json, messges.size());
+                savaImage(sendPicture.get(i).getPath_origin(), messges.size());
             }
         }
     }
@@ -538,7 +544,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
                         messge.setImagePath(fileName);
                         updateView(messge);
                         //保存图片到服务器
-                        savaImage(fileName, json,messges.size());
+                        savaImage(fileName,messges.size());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -550,7 +556,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
     }
 
     //保存图片到服务器
-    private void savaImage(final String fileName, final JSONObject json, final int size) {
+    private void savaImage(final String fileName, final int size) {
         try {
             if (!Defined.isIntenet(SendMessage.this))
                 return;
@@ -562,7 +568,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
-                        getImageUrl(linkMan.getId() + date, json,size);
+                        getImageUrl(linkMan.getId() + date,size);
                     } else {
                         Toast.makeText(SendMessage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -574,7 +580,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
     }
 
     //获取图片URl并发送消息
-    public void getImageUrl(String name, final JSONObject json, final int size) {
+    public void getImageUrl(String name, final int size) {
         AVQuery<AVObject> query = new AVQuery<>("Image");
         query.whereEqualTo("name", name);
         query.getFirstInBackground(new GetCallback<AVObject>() {
@@ -587,8 +593,8 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
                 //发送消息
                 if (chatImageUrl != null) {
                     try {
-                        messges.get(size).update(chatImageUrl);
-                        sendMsg(messges.get(size).getMsg().toString());
+                        messges.get(size-1).update(chatImageUrl);
+                        sendMsg(messges.get(size-1).getMsg().toString());
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -659,6 +665,27 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
         lv_msg.scrollToPosition(messges.size()-1);
     }
 
+    //广播
+    class MsgBoradCastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Messge messge= (Messge) intent.getSerializableExtra("msg_single");
+            if(messge.getFrom().equals(linkMan.getId())){
+                abortBroadcast();
+                updateView(messge);
+            }
+        }
+    }
+
+    //注册广播
+    private void signBroadCast() {
+        msgBoradCastReceiver=new MsgBoradCastReceiver();
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("boradcast.action.GETMESSAGE");
+        intentFilter.setPriority(1000);
+        registerReceiver(msgBoradCastReceiver,intentFilter);
+    }
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -669,4 +696,12 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        new SavaDate(this).saveMsg(messges,linkMan.getId());
+        unregisterReceiver(msgBoradCastReceiver);
+        super.onDestroy();
+    }
+
 }

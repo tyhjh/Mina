@@ -18,6 +18,7 @@ import java.util.List;
 
 import mina.Connect;
 import mina.getJson;
+import myinterface.SendBordCast;
 import tools.Defined;
 import tools.SavaDate;
 
@@ -36,12 +37,12 @@ public class User {
     private static List<Picture> photo;
 
     //初始化
-    public static String init(Context context, String ip, int port){
+    public static String init(Context context, String ip, int port, SendBordCast sendBordCast){
         Connect.setReternMsg(null);
         if(!Defined.isIntenet(context))
             return context.getString(R.string.warn_no_internet);
         else
-            connect = Connect.getInstance(ip,port);
+            connect = Connect.getInstance(ip,port,sendBordCast);
         return getReternMsg();
     }
 
@@ -101,8 +102,10 @@ public class User {
     private static String getReternMsg() {
         long time=System.currentTimeMillis();
         while (Connect.getReternMsg()==null) {
-            if(System.currentTimeMillis()-time>2000)
+            if(System.currentTimeMillis()-time>3000) {
+                Log.e("User","time："+(System.currentTimeMillis()));
                 return null;
+            }
         }
         return Connect.getReternMsg();
     }

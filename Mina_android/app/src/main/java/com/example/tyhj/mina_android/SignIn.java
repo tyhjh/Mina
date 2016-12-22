@@ -50,7 +50,6 @@ public class SignIn extends AppCompatActivity {
         if(user!=null){
             Log.e("SignIn:","获取到保存的用户数据");
             User.userInfo=user;
-            MinaSocket.signIn=true;
             startService(new Intent(this, MinaSocket_.class));
             startActivity(new Intent(SignIn.this, MainActivity_.class));
             this.finish();
@@ -162,6 +161,8 @@ public class SignIn extends AppCompatActivity {
         String code=User.signIn(et_id.getText().toString(),et_psd.getText().toString(),this);
         if(code!=null&&code.equals("200"))
             sucess(et_id.getText().toString(),et_psd.getText().toString());
+        else if(code==null)
+            toast("网络出错");
         else
             toast(code);
     }

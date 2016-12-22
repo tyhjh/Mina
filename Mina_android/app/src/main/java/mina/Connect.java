@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mina.MinaClientHandler;
+import myinterface.SendBordCast;
 import object.LinkMan;
 import object.User;
 import tools.Defined;
@@ -37,10 +38,13 @@ public class Connect {
     private static String ip;
 
     private static int port;
+
+    SendBordCast sendBordCast;
     //初始化
-    private Connect(String ip,int port ) {
+    private Connect(String ip, int port, SendBordCast sendBordCast) {
         this.ip=ip;
         this.port=port;
+        this.sendBordCast= sendBordCast;
         try {
             //Create TCP/IP connection
             if(connector==null) {
@@ -55,7 +59,7 @@ public class Connect {
                 //设定这个过滤器将一行一行(/r/n)的读取数据
                 chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
 
-                minaClientHandler = new MinaClientHandler(this);
+                minaClientHandler = new MinaClientHandler(this,sendBordCast);
 
 
                 //客户端的消息处理器：一个SamplMinaServerHander对象
@@ -83,12 +87,12 @@ public class Connect {
     }
 
     //获取实例
-    public static Connect getInstance(String ip, int port) {
+    public static Connect getInstance(String ip, int port,SendBordCast sendBordCast) {
         // if already inited, no need to get lock everytime
         if (connect == null||session==null||!session.isConnected()) {
             synchronized (Connect.class) {
                 if (connect == null ||session==null|| !session.isConnected()) {
-                    connect = new Connect(ip, port);
+                    connect = new Connect(ip, port,sendBordCast);
                 }
             }
         }
@@ -130,8 +134,16 @@ public class Connect {
     public  void logOut() {
         if (connector == null)
             return;
-        session.close();
-        connector.dispose();
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("action","signOut");
+            jsonObject.put("u_id",User.userInfo.getId());
+            User.userInfo=null;
+            session.write(jsonObject.toString());
+            connector=null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     //创建用户
@@ -156,8 +168,7 @@ public class Connect {
 
     //重新连接
     public  IoSession reconnect(){
-
-        getInstance(ip,port);
+        getInstance(ip,port,sendBordCast);
         JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("action","reconnect");

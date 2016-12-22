@@ -7,6 +7,7 @@ import org.apache.mina.core.session.IoSession;
 import org.json.JSONObject;
 
 
+import myinterface.SendBordCast;
 import object.User;
 import tools.Defined;
 
@@ -16,10 +17,11 @@ import tools.Defined;
 public class MinaClientHandler extends IoHandlerAdapter {
 
     Connect connect;
+    SendBordCast sendBordCast;
 
-
-    public MinaClientHandler(Connect connect){
+    public MinaClientHandler(Connect connect, SendBordCast sendBordCast){
         this.connect=connect;
+        this.sendBordCast=sendBordCast;
     }
 
 
@@ -42,7 +44,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
             throws Exception {
         System.out.println("收到消息了"+message.toString());
         JSONObject jsonObject = new JSONObject(message.toString());
-        GetCode.getCode(jsonObject);
+        GetCode.getCode(jsonObject,sendBordCast);
     }
 
     @Override

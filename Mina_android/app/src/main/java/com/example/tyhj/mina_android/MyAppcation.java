@@ -1,6 +1,7 @@
 package com.example.tyhj.mina_android;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.avos.avoscloud.AVOSCloud;
 
@@ -14,5 +15,4 @@ public class MyAppcation extends Application {
         super.onCreate();
         AVOSCloud.initialize(this, "Yi6HruJsj4h2bufroQKC9kJT-gzGzoHsz", "2nWoF8MhHN6kibFs72bVhLWV");
     }
-
 }

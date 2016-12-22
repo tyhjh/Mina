@@ -25,7 +25,6 @@ public class Mysql {
 	static String url3="jdbc:mysql://10.66.196.124/mina?useUnicode=true&characterEncoding=utf8";
 	static Connection conn;
 	static Statement statement;
-
 	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

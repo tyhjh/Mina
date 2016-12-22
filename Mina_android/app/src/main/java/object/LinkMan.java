@@ -77,10 +77,10 @@ public class LinkMan implements Serializable{
 
     public int getType(){
         Messge messge=null;
-        if(messges!=null) {
+        if(messges!=null&&messges.size()>0) {
             messge = messges.get(messges.size() - 1);
             try {
-               return messge.getMsg().getJSONObject("msg").getInt("type");
+               return messge.getMsg().getInt("type");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -90,11 +90,11 @@ public class LinkMan implements Serializable{
 
     public String getTime(){
         Messge messge=null;
-        if(messges!=null) {
+        if(messges!=null&&messges.size()>0) {
             messge = messges.get(messges.size() - 1);
             try {
                 String date=messge.getMsg().getString("date");
-                return Defined.getTime2(Integer.parseInt(date.substring(0,4)+date.substring(5,7)+date.substring(8,10)+date.substring(11,13)+date.substring(14,16)+date.substring(17,19)));
+                return Defined.getTime2(Integer.parseInt(date.substring(5,7)+date.substring(8,10)+date.substring(11,13)+date.substring(14,16)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -104,7 +104,7 @@ public class LinkMan implements Serializable{
 
     public String getWho() {
         Messge messge=null;
-        if(messges!=null) {
+        if(messges!=null&&messges.size()>0) {
             messge = messges.get(messges.size() - 1);
             if(messge.getType()==0)
                 return "你：";

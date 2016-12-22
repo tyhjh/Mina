@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -58,8 +59,10 @@ public class MyMenuFragment extends MenuFragment {
         contentResolver=getActivity().getContentResolver();
         TextView textView= (TextView) view.findViewById(R.id.signature);
         imageView=(ImageView) view.findViewById(R.id.userheadImage);
-        imageView.setOutlineProvider(Defined.getOutline(true,20,0));
-        imageView.setClipToOutline(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            imageView.setOutlineProvider(Defined.getOutline(true,20,0));
+            imageView.setClipToOutline(true);
+        }
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,10 +115,13 @@ public class MyMenuFragment extends MenuFragment {
                       Toast.makeText(getActivity(),getString(R.string.share), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.menu_logout:
-                        User.userInfo=null;
-                        User.logOut(getContext());
-                        startActivity(new Intent(getContext(), SignIn_.class));
-                        getActivity().finish();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                User.logOut(getContext());
+                                handler.sendEmptyMessage(3);
+                            }
+                        }).start();
                         break;
                     case R.id.menu_about:
 
@@ -260,7 +266,8 @@ public class MyMenuFragment extends MenuFragment {
                     imageView.setImageResource(R.mipmap.defult);
                     break;
                 case 3:
-
+                    startActivity(new Intent(getContext(), SignIn_.class));
+                    getActivity().finish();
                     break;
             }
         }
