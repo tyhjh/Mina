@@ -90,6 +90,7 @@ import static fragement.MyMenuFragment.TAKE_PHOTO;
 @EActivity(R.layout.activity_send_message)
 public class SendMessage extends AppCompatActivity implements sendPicture, ExpendImage {
 
+    String TAG;
     LinkMan linkMan;
     List<Picture> pictures;
     List<Picture> sendPicture;
@@ -147,6 +148,7 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TAG=getLocalClassName();
         super.onCreate(savedInstanceState);
         contentResolver = getContentResolver();
         getWindow().setBackgroundDrawableResource(R.mipmap.chat_bg);
@@ -651,12 +653,18 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
     public void updateView(Messge messge) {
         String time=null;
         if(messges.size()>0)
-            time = Defined.getTime(messge.getIntTime());
+            time = Defined.getTime(messges.get(messges.size()-1).getIntTime());
         else
             time="刚刚";
-        messge.setTime(time);
+
+        if(time!=null){
+            Messge messge1=new Messge(messge.getMsg());
+            messge1.setType(2);
+            messge1.setTime(time);
+            messges.add(messge1);
+        }
         messges.add(messge);
-        messageAdpter.notifyItemInserted(messges.size() - 1);
+        messageAdpter.notifyDataSetChanged();
         toLasted();
     }
 
@@ -676,6 +684,8 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
         @Override
         public void onReceive(Context context, Intent intent) {
             Messge messge= (Messge) intent.getSerializableExtra("msg_single");
+            messge.setRead(true);
+            Log.e(TAG,"");
             if(messge.getFrom().equals(linkMan.getId())){
                 abortBroadcast();
                 updateView(messge);

@@ -43,6 +43,9 @@ public class GetCode {
                     Messge messge=new Messge(jsonObject);
                     sendBordCast.sendBordcast(messge);
                     break;
+                case "getNewMsg":
+
+                    break;
             }
 
         } catch (JSONException e) {

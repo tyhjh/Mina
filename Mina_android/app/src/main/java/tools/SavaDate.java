@@ -115,13 +115,7 @@ public  class SavaDate {
         return object;
     }
 
-    //保存一条信息
-    public static void saveOnemessge(Messge messge){
-        List<Messge> messges=getMsg(messge.getFrom());
-        if(messges==null)
-            messges=new ArrayList<Messge>();
-        messges.add(messge);
-        saveMsg(messges,messge.getFrom());
+
     }*/
 
     //删除用户信息
@@ -195,6 +189,19 @@ public  class SavaDate {
         return true;
     }
 
-
+    //保存一条信息
+    public static void saveOnemessge(Messge messge) {
+        List<LinkMan> linkMen=getLinkMan();
+        if(linkMen!=null)
+        for(int i=0;i<linkMen.size();i++){
+            if(linkMen.get(i).getId().equals(messge.getFrom())){
+                linkMen.get(i).getMessges().add(messge);
+                Log.e("SaveDate","保存了新信息");
+                break;
+            }
+        }
+        saveLinkMan(linkMen);
+        Log.e("SaveDate","保存了新信息2");
+    }
 
 }  

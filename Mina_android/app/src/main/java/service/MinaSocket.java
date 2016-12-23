@@ -1,14 +1,24 @@
 package service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.example.tyhj.mina_android.MainActivity_;
+import com.example.tyhj.mina_android.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.tyhj.myfist_2016_6_29.MyTime;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EService;
@@ -29,6 +39,7 @@ import object.Messge;
 import object.Picture;
 import object.User;
 import object.UserInfo;
+import tools.ActivityCollector;
 import tools.Defined;
 import tools.SavaDate;
 
@@ -39,6 +50,8 @@ public class MinaSocket extends Service implements SendBordCast{
     static String IP= "192.168.31.215";
 
     public static String actionSignIn="singleTalk";
+
+    static NotificationManager mNotificationManager;
 
     boolean isReconnect=true;
 
@@ -112,11 +125,46 @@ public class MinaSocket extends Service implements SendBordCast{
         User.setPhoto(pictures);
     }
 
+    //发送广播
     @Override
     public void sendBordcast(Messge messge) {
         Intent intent = new Intent("boradcast.action.GETMESSAGE");
         intent.putExtra("msg_single", messge);
-        sendBroadcast(intent);
+        sendOrderedBroadcast(intent,null);
+        if(!ActivityCollector.isActivityExist(MainActivity_.class)){
+            notificationBar(messge.getFrom(),messge.getContent(),1);
+            User.upDateView(getApplicationContext(),messge);
+        }
     }
+
+    //通知栏配置
+    private void notificationBar(String name, String text, int count) {
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.notify);
+        mRemoteViews.setImageViewResource(R.id.iv_headImage, R.mipmap.defult);
+        mRemoteViews.setTextViewText(R.id.from, "\t\tFrom：" + name);
+        mRemoteViews.setTextViewText(R.id.text, "\t\t"+text);
+        mRemoteViews.setTextViewText(R.id.time, new MyTime().getHour() + ":" + new MyTime().getSecond());
+        mRemoteViews.setTextViewText(R.id.count, count + "");
+        Intent intent = new Intent(getApplicationContext(),MainActivity_.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+        mBuilder.setContentIntent(pendingIntent);
+        /*mBuilder.setContentTitle(name);
+        mBuilder.setContentText(text);
+        mBuilder.setTicker("收到来自"+name+"的消息");
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),R.mipmap.defult));*/
+        mBuilder.setContent(mRemoteViews);
+        mBuilder.setPriority(Notification.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setSmallIcon(R.drawable.ic_circle_24dp);
+        Notification notification = mBuilder.build();
+        mNotificationManager.notify(1, notification);
+    }
+
+
 
 }

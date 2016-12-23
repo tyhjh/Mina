@@ -131,8 +131,6 @@ public class User {
 
     //获取好友
     public static List<LinkMan> getFriends(Context context){
-        if(linkMens!=null)
-            return linkMens;
         List<LinkMan> linkMen;
         linkMen=new SavaDate(context).getLinkMan();
         if(linkMen!=null&&linkMen.size()>0) {
@@ -171,12 +169,12 @@ public class User {
         return linkMen;
     }
 
-    //获取相应的聊天信息
+    //获取相应的未读聊天信息
     public static List<Messge> getMsgLog(String id){
         List<Messge> messges=new ArrayList<Messge>();
+
         return messges;
     }
-
 
     //获取图片
     public static List<Picture> getPhoto() {
@@ -212,5 +210,14 @@ public class User {
             }
         }).start();
     }
+    public static void upDateView(final Context context, final Messge messge){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new SavaDate(context).saveOnemessge(messge);
+            }
+        }).start();
+    }
+
 
 }

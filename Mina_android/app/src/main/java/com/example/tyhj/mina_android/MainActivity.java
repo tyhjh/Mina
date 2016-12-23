@@ -33,6 +33,7 @@ import myviews.waveNavigation.LeftDrawerLayout;
 import object.LinkMan;
 import object.Messge;
 import object.User;
+import tools.ActivityCollector;
 import tools.SavaDate;
 
 @EActivity(R.layout.activity_main)
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     List<LinkMan> linkMens=new ArrayList<LinkMan>();
     private LeftDrawerLayout mLeftDrawerLayout;
 
+    String TAG;
+
     LinkManAdpter manAdpter;
 
     MsgBoradCastReceiver msgBoradCastReceiver;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TAG=getLocalClassName();
+        ActivityCollector.addActivity(this, getClass());
     }
 
     @ViewById
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Background
     void getFriends(){
         try {
-            Thread.sleep(300);
+            Thread.sleep(600);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -113,11 +118,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Messge messge= (Messge) intent.getSerializableExtra("msg_single");
+            messge.setRead(false);
+            Log.e(TAG,"收到广播了");
             for(int i=0;i<linkMens.size();i++){
                 if(linkMens.get(i).getId().equals(messge.getFrom())){
                     LinkMan linkMan=linkMens.get(i);
-                    linkMan.getMessges().add(messge);
                     linkMens.remove(i);
+                    linkMan.getMessges().add(messge);
                     linkMens.add(0,linkMan);
                     updateView(i);
                     break;
@@ -138,12 +145,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(msgBoradCastReceiver);
+        ActivityCollector.removeActivity(this);
         super.onDestroy();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
         getFriends();
     }
 }

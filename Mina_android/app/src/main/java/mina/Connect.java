@@ -3,6 +3,8 @@ package mina;
 import android.util.Log;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.future.ConnectFuture;
@@ -17,6 +19,7 @@ import org.json.JSONObject;
 import mina.MinaClientHandler;
 import myinterface.SendBordCast;
 import object.LinkMan;
+import object.Messge;
 import object.User;
 import tools.Defined;
 
@@ -24,7 +27,7 @@ public class Connect {
 
     private static String u_id = null;
 
-    private static String init, signUp, signIn, singleTalk, reconnect, getFriends;
+    private static String init, signUp, signIn, singleTalk, reconnect, getFriends,getNewMsg;
 
     private static IoSession session;
 
@@ -194,6 +197,22 @@ public class Connect {
         }
     }
 
+    //获取未读消息
+    public String getMsg(String u_id){
+        List<Messge> messges=new ArrayList<Messge>();
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("action","getNewMsg");
+            jsonObject.put("from",u_id);
+            jsonObject.put("to",User.userInfo.getId());
+            session.write(jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return getReternMsg("getNewMsg");
+    }
+
     public String getU_id() {
         return u_id;
     }
@@ -210,6 +229,8 @@ public class Connect {
                 return Connect.singleTalk;
             case "getFriends":
                 return Connect.getFriends;
+            case "getNewMsg":
+                return Connect.getNewMsg;
         }
         return null;
     }

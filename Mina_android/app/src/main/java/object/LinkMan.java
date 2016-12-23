@@ -1,5 +1,7 @@
 package object;
 
+import android.util.Log;
+
 import org.json.JSONException;
 
 import java.io.Serializable;
@@ -67,10 +69,13 @@ public class LinkMan implements Serializable{
     }
 
     public int getUnRead(){
-        if(messges!=null)
-        for(int i=messges.size()-1;i>=0;i--){
-            if(messges.get(i).isRead()||messges.get(i).getType()==1)
-                return messges.size()-1-i;
+        if(messges!=null) {
+            Log.e("LinkMan：",messges.size()+"");
+            for (int i = messges.size() - 1; i >= 0; i--) {
+                if (messges.get(i).isRead() || messges.get(i).getType() == 1)
+                    return messges.size() - i-1;
+            }
+            return messges.size();
         }
         return 0;
     }
