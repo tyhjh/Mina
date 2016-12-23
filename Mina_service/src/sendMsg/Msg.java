@@ -26,6 +26,8 @@ public class Msg {
 	private static final String GET_FRIENDS = "getFriends";
 	
 	private static final String SIGN_OUT="signOut";
+	
+	private static final String GET_NEW_MSG="getNewMsg";
 
 	public static void msgManage(IoSession session, JSONObject jsonObject) throws JSONException {
 		switch (jsonObject.getString("action")) {
@@ -57,6 +59,10 @@ public class Msg {
 		case SIGN_OUT:
 			signOut(session,jsonObject.getString("u_id"));
 			break;
+			
+		case GET_NEW_MSG:
+			getNewMsg(session, jsonObject);
+			break;
 		default:
 			break;
 		}
@@ -64,7 +70,9 @@ public class Msg {
 		Collection<IoSession> sessions = session.getService().getManagedSessions().values();
 		int i=1;
 		for (IoSession sess : sessions) {
+			
 			System.out.println(i+"存在的用户："+sess.getAttribute("id")+" ");
+			i++;
 		}
 	}
 
@@ -220,12 +228,32 @@ public class Msg {
 		}
 	}
 	
+	//退出
 	private static void signOut(IoSession session,String id) {
 		Collection<IoSession> sessions = session.getService().getManagedSessions().values();
 		for (IoSession sess : sessions) {
 			if (sess.getAttribute("id", "xx").equals(id))
 				sess.close();
 		}
+	}
+	
+	//获取新信息
+	private static void getNewMsg(IoSession session,JSONObject jsonObject){
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				String to;
+				try {
+					to = jsonObject.getString("to");
+					Mysql.getNewMsg(session,to);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 	
 }

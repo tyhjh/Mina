@@ -200,4 +200,40 @@ public class Mysql {
 
 		return object.toString();
 	}
+	//获取新消息
+	public synchronized static void getNewMsg(IoSession session,String to) {
+		JSONObject jsonObject=new JSONObject();
+		int status = 0;
+		String sql = "select * from msg where m_to= '" + to + "' and m_isReceive='" + status + "'";
+		ResultSet rs = null;
+			try {
+				rs = (ResultSet) statement.executeQuery(sql);
+				JSONArray jsonArray=new JSONArray();
+				while (rs.next()) {
+					try {
+						JSONObject object=new JSONObject(rs.getString(3));
+						jsonArray.put(object);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				try {
+					jsonObject.put("action", "getNewMsg");
+					jsonObject.put("code", 200);
+					jsonObject.put("msg", jsonArray);
+					session.write(jsonObject.toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				rs.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+	}
+	
 }

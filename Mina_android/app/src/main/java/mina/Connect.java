@@ -198,19 +198,15 @@ public class Connect {
     }
 
     //获取未读消息
-    public String getMsg(String u_id){
-        List<Messge> messges=new ArrayList<Messge>();
+    public void getMsg(){
         JSONObject jsonObject=new JSONObject();
         try {
             jsonObject.put("action","getNewMsg");
-            jsonObject.put("from",u_id);
             jsonObject.put("to",User.userInfo.getId());
             session.write(jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return getReternMsg("getNewMsg");
     }
 
     public String getU_id() {

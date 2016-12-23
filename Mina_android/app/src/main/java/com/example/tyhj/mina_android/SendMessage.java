@@ -713,15 +713,21 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
         }
     };
 
+
     @Override
-    protected void onDestroy() {
+    public void onBackPressed() {
         for(Messge msg:messges){
             msg.setRead(true);
         }
         linkMan.setMessges(messges);
-        Log.e("SendMessage","保存长度为："+messges.size()+messageAdpter.getMessges().size());
-        User.upDateView(this,linkMan);
+        Log.e("SendMessage","保存为："+linkMan.getId());
+        User.upDateView(linkMan);
         unregisterReceiver(msgBoradCastReceiver);
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
     }
 }

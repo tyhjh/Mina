@@ -76,17 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Background
     void getFriends(){
-        try {
-            Thread.sleep(600);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         linkMens.clear();
-        List<LinkMan> linkMen=User.getFriends(this);
-        if(linkMen!=null)
-            for(int i=0;i<linkMen.size();i++){
-                linkMens.add(linkMen.get(i));
-            }
+        linkMens.addAll(User.getFriends(this));
         updateView(-1);
     }
 
@@ -109,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             manAdpter.notifyItemMoved(from,0);
         }
-        User.upDateView(this,linkMens);
         //Log.e("MainActivity","执行了2："+System.currentTimeMillis());
     }
 
@@ -122,11 +112,11 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG,"收到广播了");
             for(int i=0;i<linkMens.size();i++){
                 if(linkMens.get(i).getId().equals(messge.getFrom())){
-                    LinkMan linkMan=linkMens.get(i);
-                    linkMens.remove(i);
-                    linkMan.getMessges().add(messge);
-                    linkMens.add(0,linkMan);
-                    updateView(i);
+                    if(linkMens.get(i).getMessges()==null){
+                        linkMens.get(i).setMessges(new ArrayList<Messge>());
+                    }
+                    linkMens.get(i).getMessges().add(messge);
+                    manAdpter.notifyItemChanged(i);
                     break;
                 }
             }
@@ -142,16 +132,24 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(msgBoradCastReceiver,intentFilter);
     }
 
+    //获取更新后的列表
+    private void geUpdateView(){
+        linkMens.clear();
+        linkMens.addAll(User.getUpdate());
+        manAdpter.notifyDataSetChanged();
+    }
+
     @Override
     protected void onDestroy() {
         unregisterReceiver(msgBoradCastReceiver);
         ActivityCollector.removeActivity(this);
+        User.upDateView(this,linkMens);
         super.onDestroy();
     }
 
     @Override
     protected void onRestart() {
+        geUpdateView();
         super.onRestart();
-        getFriends();
     }
 }

@@ -5,6 +5,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.example.tyhj.mina_android.R;
+import com.nostra13.universalimageloader.utils.L;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
@@ -30,7 +31,7 @@ import static android.content.ContentValues.TAG;
 
 public class User {
 
-    public static int TIME_OUT=3000;
+    public static int TIME_OUT=5000;
 
     public static UserInfo userInfo;
 
@@ -40,6 +41,8 @@ public class User {
 
     static List<LinkMan> linkMens;
 
+    public static boolean isUpdate;
+
     //初始化
     public static String init(Context context, String ip, int port, SendBordCast sendBordCast){
         Connect.setReternMsg(null,"init");
@@ -47,7 +50,7 @@ public class User {
             return context.getString(R.string.warn_no_internet);
         else
             connect = Connect.getInstance(ip,port,sendBordCast);
-        return getReternMsg("init");
+        return null;
     }
 
     //登陆
@@ -106,7 +109,7 @@ public class User {
         long time=System.currentTimeMillis();
         while (Connect.getReternMsg(action)==null) {
             if(System.currentTimeMillis()-time>TIME_OUT) {
-                Log.e("User","time："+(System.currentTimeMillis()));
+                Log.e("User",action+"time："+(System.currentTimeMillis()-time));
                 return null;
             }
         }
@@ -129,14 +132,37 @@ public class User {
         return connect;
     }
 
-    //获取好友
-    public static List<LinkMan> getFriends(Context context){
-        List<LinkMan> linkMen;
+    //获取本地好友
+    public static List<LinkMan> getFriendHost(Context context){
+
+        List<LinkMan> linkMen=new ArrayList<LinkMan>();
         linkMen=new SavaDate(context).getLinkMan();
         if(linkMen!=null&&linkMen.size()>0) {
             User.linkMens = linkMen;
             return linkMen;
         }
+        return linkMen;
+    }
+
+    //保存更新消息
+    public static void upDateView(LinkMan linkMan){
+        User.linkMens.remove(linkMan);
+        User.linkMens.add(0,linkMan);
+    }
+
+    //获取更新消息
+    public static List<LinkMan> getUpdate(){
+        return User.linkMens;
+    }
+
+    //获取好友
+    public static List<LinkMan> getFriends(Context context){
+        List<LinkMan> linkMen=getFriendHost(context);
+        if(linkMen!=null&&linkMen.size()>0) {
+            User.linkMens=linkMen;
+            return linkMen;
+        }
+
         linkMen=new ArrayList<LinkMan>();
         Connect.setReternMsg(null,"getFriends");
         long time=System.currentTimeMillis();
@@ -157,46 +183,51 @@ public class User {
                 linkMen.add(new LinkMan(jsonObject.getString("head_image"),
                         jsonObject.getString("u_id"),
                         jsonObject.getString("u_name"),
-                        User.getMsgLog(jsonObject.getString("u_id"))
+                        null
                         ));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         User.linkMens = linkMen;
-        if(linkMens==null)
-            linkMens=new ArrayList<LinkMan>();
+        if(User.linkMens==null)
+            User.linkMens=new ArrayList<LinkMan>();
         return linkMen;
     }
 
-    //获取相应的未读聊天信息
-    public static List<Messge> getMsgLog(String id){
-        List<Messge> messges=new ArrayList<Messge>();
-
-        return messges;
+    //获取未读聊天信息
+    public static void getMsgLog(){
+        Connect.setReternMsg(null,"getNewMsg");
+        if(connect==null)
+            return;
+        connect.getMsg();
+        String msg=getReternMsg("getNewMsg");
+        if(msg!=null){
+            Log.e("User","getNewMsg：收到了未读消息");
+            try {
+                JSONObject jsonObject=new JSONObject(msg);
+                JSONArray jsonArray=jsonObject.getJSONArray("msg");
+                for(int i=0;i<jsonArray.length();i++){
+                    Messge messge=new Messge(jsonArray.getJSONObject(i));
+                    savaNewMsg(messge);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    //获取图片
+    //获取最近图片
     public static List<Picture> getPhoto() {
         return photo;
     }
 
+    //保存最近图片列表
     public static void setPhoto(List<Picture> photo) {
         User.photo = photo;
     }
 
-
-    public static void upDateView(final Context context, LinkMan linkMan){
-        if(linkMens.contains(linkMan))
-            linkMens.remove(linkMan);
-        linkMens.add(0,linkMan);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                new SavaDate(context).saveLinkMan(linkMens);
-            }
-        }).start();
-    }
+    //保存消息
     public static void upDateView(final Context context, List<LinkMan> linkMan){
         linkMens.clear();
         if(linkMan!=null)
@@ -210,6 +241,8 @@ public class User {
             }
         }).start();
     }
+
+    //保存一条信息，后台收到消息的时候
     public static void upDateView(final Context context, final Messge messge){
         new Thread(new Runnable() {
             @Override
@@ -219,5 +252,14 @@ public class User {
         }).start();
     }
 
-
+    //保存一条信息，前台收到一条消息的时候
+    public static void savaNewMsg(Messge messge){
+        if(User.linkMens!=null)
+            for(int i=0;i<User.linkMens.size();i++){
+                if(User.linkMens.get(i).getId().equals(messge.getFrom())){
+                    User.linkMens.get(i).getMessges().add(messge);
+                    break;
+                }
+            }
+    }
 }

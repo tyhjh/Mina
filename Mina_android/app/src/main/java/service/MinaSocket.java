@@ -131,6 +131,7 @@ public class MinaSocket extends Service implements SendBordCast{
         Intent intent = new Intent("boradcast.action.GETMESSAGE");
         intent.putExtra("msg_single", messge);
         sendOrderedBroadcast(intent,null);
+        //后台时候
         if(!ActivityCollector.isActivityExist(MainActivity_.class)){
             notificationBar(messge.getFrom(),messge.getContent(),1);
             User.upDateView(getApplicationContext(),messge);
