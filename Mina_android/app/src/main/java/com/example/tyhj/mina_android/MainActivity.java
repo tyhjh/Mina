@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         linkMens.clear();
         linkMens.addAll(User.getFriends(this));
         updateView(-1);
+        User.getNewMsg();
+        geUpdateView();
     }
 
     private void initdrawerLayout() {
@@ -136,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //获取更新后的列表
-    private void geUpdateView(){
+    @UiThread
+    void geUpdateView(){
         linkMens.clear();
         linkMens.addAll(User.getUpdate());
         manAdpter.notifyDataSetChanged();

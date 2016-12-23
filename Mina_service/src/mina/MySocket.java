@@ -11,6 +11,7 @@ public class MySocket {
 		try {
 			NioSocketAcceptor acceptor=new NioSocketAcceptor();
 			acceptor.setHandler(new MySeverHandler());
+		
 			acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MyTextLineFactory()));
 			////设置服务器空闲状态̬
 			acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 30);

@@ -196,7 +196,7 @@ public class User {
     }
 
     //获取未读聊天信息
-    public static void getMsgLog(){
+    public static void getNewMsg(){
         Connect.setReternMsg(null,"getNewMsg");
         if(connect==null)
             return;

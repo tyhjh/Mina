@@ -222,7 +222,7 @@ public class Mysql {
 					jsonObject.put("action", "getNewMsg");
 					jsonObject.put("code", 200);
 					jsonObject.put("msg", jsonArray);
-					session.write(jsonObject.toString());
+					session.write(jsonObject.toString()+"\n");
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

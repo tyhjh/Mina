@@ -15,6 +15,8 @@ public class MyTextLineEncoder implements ProtocolEncoder {
 		
 	}
 
+	
+	
 	@Override
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out)
 			throws Exception {

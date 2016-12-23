@@ -61,8 +61,11 @@ public class Connect {
                 //创建接受数据的过滤器
                 DefaultIoFilterChainBuilder chain = connector.getFilterChain();
 
+                TextLineCodecFactory textLineCodecFactory=new TextLineCodecFactory();
+                textLineCodecFactory.setDecoderMaxLineLength(102400);
+                textLineCodecFactory.setEncoderMaxLineLength(102400);
                 //设定这个过滤器将一行一行(/r/n)的读取数据
-                chain.addLast("myChin", new ProtocolCodecFilter(new TextLineCodecFactory()));
+                chain.addLast("myChin", new ProtocolCodecFilter(textLineCodecFactory));
 
                 minaClientHandler = new MinaClientHandler(this, sendBordCast);
 
@@ -247,6 +250,9 @@ public class Connect {
                 break;
             case "getFriends":
                 Connect.getFriends = reternMsg;
+                break;
+            case "getNewMsg":
+                Connect.getNewMsg=reternMsg;
                 break;
         }
     }

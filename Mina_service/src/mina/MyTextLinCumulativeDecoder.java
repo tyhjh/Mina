@@ -7,6 +7,9 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 
 public class MyTextLinCumulativeDecoder extends CumulativeProtocolDecoder {
 
+	
+	
+	
 	@Override
 	protected boolean doDecode(IoSession session, IoBuffer in,
 			ProtocolDecoderOutput out) throws Exception {
