@@ -662,9 +662,10 @@ public class SendMessage extends AppCompatActivity implements sendPicture, Expen
             messge1.setType(2);
             messge1.setTime(time);
             messges.add(messge1);
+            messageAdpter.notifyItemInserted(messges.size()-1);
         }
         messges.add(messge);
-        messageAdpter.notifyDataSetChanged();
+        messageAdpter.notifyItemInserted(messges.size()-1);
         toLasted();
     }
 

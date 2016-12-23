@@ -229,7 +229,7 @@ public class MessageAdpter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void updateTime() {
         for (int i = messges.size() - 1; i >= 0; i--) {
-            if (messges.get(i).getType()== 0) {
+            if (messges.get(i).getType()== 2) {
                 if (messges.get(i).getTime()==null||messges.get(i).getTime().contains("月"))
                     break;
                 messges.get(i).setTime(Defined.getTime2(messges.get(i).getIntTime()));

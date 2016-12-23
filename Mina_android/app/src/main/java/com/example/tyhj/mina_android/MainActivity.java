@@ -113,12 +113,15 @@ public class MainActivity extends AppCompatActivity {
             for(int i=0;i<linkMens.size();i++){
                 if(linkMens.get(i).getId().equals(messge.getFrom())){
                     if(linkMens.get(i).getMessges()==null){
-                        linkMens.get(i).setMessges(new ArrayList<Messge>());
-                    }
-                    linkMens.get(i).getMessges().add(messge);
+                        List<Messge> messges=new ArrayList<Messge>();
+                        messges.add(messge);
+                        linkMens.get(i).setMessges(messges);
+                    }else
+                        linkMens.get(i).getMessges().add(messge);
                     manAdpter.notifyItemChanged(i);
                     break;
                 }
+
             }
         }
     }
@@ -137,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         linkMens.clear();
         linkMens.addAll(User.getUpdate());
         manAdpter.notifyDataSetChanged();
+        User.upDateView(this,linkMens);
     }
 
     @Override

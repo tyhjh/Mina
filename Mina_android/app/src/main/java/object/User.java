@@ -183,7 +183,7 @@ public class User {
                 linkMen.add(new LinkMan(jsonObject.getString("head_image"),
                         jsonObject.getString("u_id"),
                         jsonObject.getString("u_name"),
-                        null
+                        new ArrayList<Messge>()
                         ));
             }
         } catch (JSONException e) {
